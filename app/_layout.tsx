@@ -1,37 +1,23 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import {Navigator} from "expo-router";
+import Slot = Navigator.Slot;
+import {SessionProvider, useSession} from "@/app/ctx";
+import {PaperProvider} from "react-native-paper";
+import {useColorScheme} from "react-native";
+import {darkTheme, lightTheme} from "@/constants/Theme";
+import {useStorageState} from "@/app/useStorageState";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    const themeType = useColorScheme();
+    const [[isLoadingTheme, theme], setTheme] = useStorageState('theme');
+    const themeJson = {
+        'dark': darkTheme,
+        'light': lightTheme
     }
-  }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+    // @ts-ignore
+    return  <PaperProvider theme={theme === "auto" || theme === null ? themeType === "dark" ? themeJson['dark'] : themeJson['light'] :  themeJson[theme]}>
+                <SessionProvider>
+                    <Slot />
+                </SessionProvider>
+            </PaperProvider>
 }
