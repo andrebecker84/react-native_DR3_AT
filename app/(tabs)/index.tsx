@@ -16,7 +16,7 @@ export default function HomeScreen() {
       }}
     >
       <Grid>
-        <Topbar title="Home" />
+        <Topbar title="Início" />
       </Grid>
       <Grid style={styles.container}>
         <Text style={styles.title}>Sistema de Compras</Text>
