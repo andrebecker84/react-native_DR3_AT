@@ -37,24 +37,20 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.container}>
         <Grid
           style={{
-
             width: "100%",
             alignItems: "center",
             justifyContent: "center",
             display: "flex",
             flexDirection: "column",
-            
           }}
         >
           <Image
             source={require("@/assets/images/logoACME.png")}
             style={{
-              width: 250,
-              height: 200,
+              height: 350,
               resizeMode: "contain", 
             }}
           />
-    
         </Grid>
         <View style={styles.content}>
           <Text style={styles.title}>
@@ -133,7 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f5f5", // para garantir que o fundo esteja visível
+    backgroundColor: "rgb(10, 0, 30)",
     width: "100%", // ocupa toda a largura da tela
   },
   content: {
@@ -149,7 +145,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 50,
     width: "100%", // ocupa toda a largura do content
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "rgb(29, 33, 38)",
     borderColor: "#E8EAF6",
     borderWidth: 2,
     borderRadius: 15,
@@ -166,12 +162,12 @@ const styles = StyleSheet.create({
   button: {
     width: "100%", // o botão também ocupa toda a largura
     marginVertical: 15,
-    backgroundColor: "#d32f2f",
+    backgroundColor: "rgb(223, 70, 97)",
     padding: 20,
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#d32f2f",
+    shadowColor: "rgba(152, 49, 70, 0.3)",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 5,

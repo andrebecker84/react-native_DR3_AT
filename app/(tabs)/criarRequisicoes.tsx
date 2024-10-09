@@ -151,7 +151,7 @@ export default function CriarRequisicoesScreen() {
           )}
         </View>
         <Button
-          icon="send"
+          icon="add-circle-sharp"
           mode="contained"
           onPress={() => {
             handleSubmit();
