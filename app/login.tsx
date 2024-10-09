@@ -53,9 +53,9 @@ export default function LoginScreen() {
           />
         </Grid>
         <View style={styles.content}>
-          <Text style={styles.title}>
+          {/* <Text style={styles.title}>
             {possuiConta ? "Login" : "Criar Conta"}
-          </Text>
+          </Text> */}
           {possuiConta ? null : (
             <TextInput
               style={styles.textInput}
@@ -140,20 +140,21 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "800",
     marginBottom: 40,
-    color: "rgb(32, 26, 25)",
+    color: "rgb(255, 255, 255)",
   },
   textInput: {
     height: 50,
     width: "100%", // ocupa toda a largura do content
     backgroundColor: "rgb(29, 33, 38)",
     borderColor: "#E8EAF6",
-    borderWidth: 2,
-    borderRadius: 15,
-    marginVertical: 15,
-    paddingHorizontal: 25,
+    borderWidth: 1,
+    borderColor: "rgb(223, 70, 97)",
+    borderRadius: 5,
+    marginVertical: 8,
+    paddingHorizontal: 20,
     fontSize: 16,
     color: "#3C4858",
-    shadowColor: "#9E9E9E",
+    shadowColor: "rgb(223, 70, 97)",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -161,10 +162,10 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%", // o botão também ocupa toda a largura
-    marginVertical: 15,
+    marginVertical: 50,
     backgroundColor: "rgb(223, 70, 97)",
-    padding: 20,
-    borderRadius: 15,
+    padding: 15,
+    borderRadius: 30,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "rgba(152, 49, 70, 0.3)",
@@ -179,9 +180,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   switchText: {
-    marginTop: 20,
-    color: "rgb(32, 26, 25)",
-    fontSize: 16,
-    fontWeight: "500",
+    marginTop: 10,
+    color: "hsl(215, 15%, 75%)",
+    fontSize: 15,
+    fontWeight: "100",
   },
 });
