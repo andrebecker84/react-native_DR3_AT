@@ -19,15 +19,14 @@ export default function HomeScreen() {
         <Topbar title="Home" />
       </Grid>
       <Grid style={styles.container}>
+        <Text style={styles.title}>Sistema de Compras</Text>
         <Image
           source={require("@/assets/images/logoACME.png")}
           style={{
-            width: 250,
-            height: 200,
+            height: 400,
             resizeMode: "contain",
           }}
         />
-        <Text style={styles.title}>ACME - SISTEMA DE COMPRAS</Text>
       </Grid>
     </Grid>
   );
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#404349",
     width: "100%",
   },
   content: {
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "800",
     marginBottom: 40,
-    color: "rgb(32, 26, 25)",
+    color: "#A32E43",
   },
   textInput: {
     height: 50,
@@ -71,12 +70,12 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     marginVertical: 15,
-    backgroundColor: "#d32f2f",
+    backgroundColor: "#732130",
     padding: 20,
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#d32f2f",
+    shadowColor: "#732130",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 5,

@@ -32,7 +32,7 @@ export default function CriarRequisicoesScreen() {
   const loadProdutos = async () => {
     const produtos = await getProdutos();
     const updatedOptions = produtos.map((produto: any) => ({
-      label: produto.id,
+      label: produto.nome,
       value: produto.nome,
     }));
     setOptions(updatedOptions); // Atualizando o estado das opções
