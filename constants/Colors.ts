@@ -67,11 +67,11 @@ export const Colors = {
     "inversePrimary": "rgb(186, 26, 32)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(245, 221, 219)",
-      "level2": "rgb(240, 216, 214)",
-      "level3": "rgb(235, 211, 209)",
-      "level4": "rgb(230, 206, 204)",
-      "level5": "rgb(225, 201, 199)"
+      "level1": "rgb(36, 46, 80)",
+      "level2": "rgb(46, 56, 100)",
+      "level3": "rgb(56, 66, 120)",
+      "level4": "rgb(66, 76, 140)",
+      "level5": "rgb(76, 86, 160)"
     },
     "surfaceDisabled": "rgba(32, 35, 48, 0.12)",
     "onSurfaceDisabled": "rgba(32, 35, 48, 0.38)",
@@ -109,11 +109,11 @@ export const Colors = {
     "inversePrimary": "rgb(223, 70, 97)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(32, 35, 48)",
-      "level2": "rgb(43, 34, 32)",
-      "level3": "rgb(50, 38, 37)",
-      "level4": "rgb(57, 43, 41)",
-      "level5": "rgb(63, 47, 46)"
+      "level1": "rgb(20, 19, 21)",
+      "level2": "rgb(30, 31, 34)",
+      "level3": "rgb(43, 45, 49)",
+      "level4": "rgb(64, 67, 73)",
+      "level5": "rgb(75, 77, 85)"
     },
     "surfaceDisabled": "rgba(192, 191, 195, 0.12)",
     "onSurfaceDisabled": "rgba(192, 191, 195, 0.38)",

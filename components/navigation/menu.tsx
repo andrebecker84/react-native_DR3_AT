@@ -7,9 +7,10 @@ const Menu = (props: any) => {
                         position: "absolute",
                         right: 20,
                         top: 80,
-                        backgroundColor: 'white',
+                        borderRadius: 20,
+                        padding: 10,
                         zIndex: 10000
-                    }} elevation={2}>
+                    }} elevation={5}>
                         {
                             props.items.map((item: any, index: number) => {
                                 return <Mn.Item

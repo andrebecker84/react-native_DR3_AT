@@ -94,9 +94,9 @@ export default function CriarRequisicoesScreen() {
   return (
     <Grid>
       <TopBar title="Nova Requisição" />
-      <Text style={styles.title}>Requisições de Compra</Text>
+      
       <Grid style={styles.card}>
-        <Text>Informe os Produtos:</Text>
+        <Text style={styles.title}>Requisição de Compra</Text>
         <Dropdown
           label="Prioridade"
           placeholder="Selecione a prioridade"
@@ -106,7 +106,7 @@ export default function CriarRequisicoesScreen() {
         />
         {options.length > 0 ? (
           <Dropdown
-            label="Produtos"
+            label="Produto"
             placeholder="Selecione um produto"
             options={options}
             value={produto}
@@ -133,9 +133,10 @@ export default function CriarRequisicoesScreen() {
         />
 
          {/* Date Picker para Data de Requisição */}
-        <View style={{ marginTop: 16 }}>
-          <Button onPress={() => setShowDataRequisicaoPicker(true)}>
-            Data de Requisição: {dayjs(dataRequisicao).format("DD/MM/YYYY")}
+        <View style={{ marginBottom: 20 }}>
+          <Text style={styles.texto}>Escolha a Data de Requisição:</Text>
+          <Button style={{ marginTop: 6, backgroundColor: "rgb(0, 0, 45)" }} icon="calendar" mode="outlined" onPress={() => setShowDataRequisicaoPicker(true)}>
+            {dayjs(dataRequisicao).format("DD/MM/YYYY HH:mm")}
           </Button>
           {showDataRequisicaoPicker && (
             <DateTimePicker
@@ -156,7 +157,7 @@ export default function CriarRequisicoesScreen() {
             handleSubmit();
           }}
         >
-          Enviar Requisição
+          Enviar
         </Button>
       </Grid>
       <Snackbar
@@ -171,24 +172,29 @@ export default function CriarRequisicoesScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 16,
+    margin: 20,
   },
   title: {
-    marginBottom: 16,
+    color: "rgb(255,255,255)",
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
   },
+  texto: {
+    color: "rgb(220,220,220)",
+    fontSize: 16,
+    textAlign: "center",
+    marginTop: 10,
+  },
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    marginVertical: 8,
+    backgroundColor: "#505050",
+    borderRadius: 40,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-    padding: 16,
-    gap: 16,
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 10,
+    elevation: 6,
+    padding: 30,
+    gap: 12,
   },
 });

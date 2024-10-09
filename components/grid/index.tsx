@@ -21,7 +21,7 @@ const Grid: React.FC<GridProps> = ({
                 ...styles.surface,
                 ...styleSurface
             }}
-            elevation={3}
+            elevation={5}
         >
             <View
                 style={{
