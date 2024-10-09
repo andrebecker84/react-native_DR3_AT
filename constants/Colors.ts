@@ -37,33 +37,33 @@ const tintColorDark = 'hsl(215, 15%, 75%)'; // contraste com azul
 export const Colors = {
   light: {
     "primary": "rgb(223, 70, 97)", // tom principal de vermelho
-    "onPrimary": "rgb(255, 255, 255)", // contraste com vermelho
+    "onPrimary": "#F8F8FF", // contraste com vermelho
     "primaryContainer": "rgb(255, 218, 214)", // container em tom mais claro
     "onPrimaryContainer": "rgb(115, 33, 48)", // contraste com o container principal
     "secondary": "rgb(118, 115, 123)", // cinza escuro
-    "onSecondary": "rgb(255, 255, 255)", // contraste para o secundário
+    "onSecondary": "#F8F8FF", // contraste para o secundário
     "secondaryContainer": "rgb(192, 191, 195)", // cinza claro
     "onSecondaryContainer": "rgb(24, 26, 35)", // contraste para container secundário
     "tertiary": "rgb(115, 33, 48)", // vermelho mais profundo
-    "onTertiary": "rgb(255, 255, 255)", // contraste para terciário
+    "onTertiary": "#F8F8FF", // contraste para terciário
     "tertiaryContainer": "rgb(223, 70, 97)", // cor terciária mais suave
     "onTertiaryContainer": "rgb(32, 35, 48)", // contraste para o container terciário
     "error": "rgb(204, 0, 0)",
-    "onError": "rgb(255, 255, 255)", // contraste para erro
+    "onError": "#F8F8FF", // contraste para erro
     "errorContainer": "rgb(255, 218, 214)",
     "onErrorContainer": "rgb(65, 0, 2)",
-    "background": "rgb(255, 251, 255)", // fundo claro
+    "background": "rgb(192,191,195)", // fundo claro
     "onBackground": "rgb(32, 35, 48)", // contraste com fundo
-    "surface": "rgb(255, 251, 255)", // mesma cor de fundo
-    "onSurface": "rgb(32, 35, 48)", // contraste na superfície
-    "surfaceVariant": "rgb(192, 191, 195)", // variante de cinza claro
+    "surface": "#F8F8FF", // mesma cor de fundo
+    "onSurface": "rgb(192,191,195)", // contraste na superfície
+    "surfaceVariant": "#F8F8FF", // variante de cinza claro
     "onSurfaceVariant": "rgb(118, 115, 123)", // contraste para a variante
     "outline": "rgb(160, 140, 138)", // cor para bordas
     "outlineVariant": "rgb(216, 194, 191)", // variante da borda
     "shadow": "rgb(0, 0, 0)", // sombras
     "scrim": "rgb(0, 0, 0)", // camadas sobre o fundo
     "inverseSurface": "rgb(54, 47, 46)", // contraste invertido na superfície
-    "inverseOnSurface": "rgb(255, 255, 255)", // cor invertida para contraste na superfície
+    "inverseOnSurface": "#F8F8FF", // cor invertida para contraste na superfície
     "inversePrimary": "rgb(186, 26, 32)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
@@ -85,26 +85,26 @@ export const Colors = {
     "secondary": "rgb(192, 191, 195)", // cinza claro
     "onSecondary": "rgb(15, 18, 20)", // contraste para secundário
     "secondaryContainer": "rgb(118, 115, 123)", // cinza médio
-    "onSecondaryContainer": "rgb(255, 255, 255)", // contraste para container secundário
+    "onSecondaryContainer": "#F8F8FF", // contraste para container secundário
     "tertiary": "rgb(163, 46, 67)", // vermelho escuro
-    "onTertiary": "rgb(255, 255, 255)", // contraste para terciário
+    "onTertiary": "#F8F8FF", // contraste para terciário
     "tertiaryContainer": "rgb(223, 70, 97)", // cor terciária mais suave
     "onTertiaryContainer": "rgb(15, 18, 20)", // contraste para container terciário
     "error": "rgb(223, 96, 96)",
     "onError": "rgb(204, 0, 0)",
     "errorContainer": "rgb(0, 0, 10)",
     "onErrorContainer": "rgb(255, 180, 171)",
-    "background": "rgb(24, 26, 35)", // fundo escuro
-    "onBackground": "rgb(255, 255, 255)", // contraste para o fundo
+    "background": "rgb(10, 0, 30)", // fundo escuro
+    "onBackground": "#F8F8FF", // contraste para o fundo
     "surface": "rgb(24, 26, 35)", // mesma cor de fundo
-    "onSurface": "rgb(192, 191, 195)", // contraste na superfície
+    "onSurface": "rgb(10, 0, 30)", // contraste na superfície
     "surfaceVariant": "rgb(118, 115, 123)", // variante de cinza médio
-    "onSurfaceVariant": "rgb(255, 255, 255)", // contraste para a variante
+    "onSurfaceVariant": "#F8F8FF", // contraste para a variante
     "outline": "rgb(59, 63, 68)", // cor para bordas
     "outlineVariant": "rgb(29, 33, 38)", // variante da borda
     "shadow": "rgb(0, 0, 0)", // sombras
     "scrim": "rgb(0, 0, 0)", // camadas sobre o fundo
-    "inverseSurface": "rgb(255, 255, 255)", // contraste invertido na superfície
+    "inverseSurface": "#F8F8FF", // contraste invertido na superfície
     "inverseOnSurface": "rgb(54, 47, 46)", // cor invertida para contraste na superfície
     "inversePrimary": "rgb(223, 70, 97)", // cor primária invertida
     "elevation": {

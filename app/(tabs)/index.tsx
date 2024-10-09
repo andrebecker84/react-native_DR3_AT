@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#404349",
     width: "100%",
   },
   content: {
@@ -82,7 +81,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   text: {
-    color: "#FFFFFF",
     fontSize: 18,
     fontWeight: "600",
   },

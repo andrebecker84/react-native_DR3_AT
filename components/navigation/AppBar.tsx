@@ -7,7 +7,7 @@ const AppBar = (props: any) => {
 
     return <Appbar.Header
                 style={{
-                    backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#f6f6f6",
+                    backgroundColor: theme.colorScheme === "dark" ? "rgb(10, 0, 30)" : "transparent",
                 }}
             >
                 {

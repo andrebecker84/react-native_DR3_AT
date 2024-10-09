@@ -14,7 +14,7 @@ interface AvatarProps {
 const Avatar = ({
   source = null,
   label = 'XD',
-  bgColor = "#fff",
+  bgColor = "rgb(223, 70, 97)",
   color = "#333",
   style = {},
   ...props

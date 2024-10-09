@@ -18,7 +18,7 @@ export const useTheme = () => {
     const newScheme = localColorScheme === "light" ? "dark" : "light";
     setLocalColorScheme(newScheme);
     router.setParams({ colorScheme: newScheme });
-    console.log("Tema alterado para: ", newScheme);
+    console.log("Tema alterado para ", newScheme);
   };
 
   return { toggleTheme, colorScheme: localColorScheme };

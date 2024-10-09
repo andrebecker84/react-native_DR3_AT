@@ -209,7 +209,6 @@ export default function PerfilScreen() {
           </Grid>
           <Grid
             style={{
-              marginTop: 30,
               ...styles.padding,
             }}
           >
@@ -258,10 +257,12 @@ const styles = {
   containerImage: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 10,
   },
   padding: {
-    padding: 16,
+    padding: 12,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   containerCenterImage: {
     width: 230,
@@ -279,7 +280,6 @@ const styles = {
     left: 0,
   },
   container: {
-    backgroundColor: "#F8F8FF",
     height: "100%",
   },
 };
