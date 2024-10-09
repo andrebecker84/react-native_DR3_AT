@@ -20,7 +20,7 @@ export default function HomeScreen() {
       </Grid>
       <Grid style={styles.container}>
         <Image
-          source={require("../../assets/images/ACME_Logo.png")}
+          source={require("@/assets/images/logoACME.png")}
           style={{
             width: 250,
             height: 200,
