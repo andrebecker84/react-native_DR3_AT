@@ -1,160 +1,96 @@
-import { Button } from '@/components';
-import { Card, Title, Paragraph, ActivityIndicator } from 'react-native-paper';
-import { View, StyleSheet } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { useEffect, useState } from 'react';
-import { db } from '@/services/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { Redirect, router } from "expo-router";
+import { Image, StyleSheet, View } from "react-native";
+import { useSession } from "../ctx";
+import { Button, Text } from "react-native-paper";
+import { Grid, TopBar } from "@/components";
+import Topbar from "@/components/navigation/TopBar";
 
-const Home = () => {
-  const [nomeUsuario, setNomeUsuario] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [logado, setLogado] = useState(false);
-  const [admin, setAdmin] = useState(false);
-
-  useEffect(() => {
-    const auth = getAuth();
-    const usuarioLogado = auth.currentUser;
-
-    const buscarDadosUsuario = async () => {
-      if (usuarioLogado) {
-        setLogado(true);
-        const usuarioRef = doc(db, 'usuarios', usuarioLogado.uid);
-        const docSnap = await getDoc(usuarioRef);
-
-        if (docSnap.exists()) {
-          const dados = docSnap.data();
-          setNomeUsuario(dados.nome || 'Nome não encontrado');
-          setAdmin(dados.role === 'admin'); // Assumindo que 'role' é uma propriedade que define o tipo de usuário
-        } else {
-          console.log('Nenhum documento encontrado!');
-        }
-      }
-      setLoading(false);
-    };
-
-    buscarDadosUsuario();
-  }, []);
-
+export default function HomeScreen() {
+  const { userEmail } = useSession();
+  
   return (
-    <View style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Content style={styles.cardContent}>
-          {loading ? (
-            <ActivityIndicator animating={true} color="#ffffff" />
-          ) : (
-            <View style={styles.userInfo}>
-              {logado ? (
-                <>
-                  {nomeUsuario && (
-                    <Paragraph style={styles.userName}>
-                      {nomeUsuario}
-                    </Paragraph>
-                  )}
-                  {admin ? (
-                    <>
-                      <Ionicons name="shield-checkmark-sharp" size={24} style={styles.adminIcon} />
-                      <Paragraph style={styles.adminText}>Administrador</Paragraph>
-                    </>
-                  ) : (
-                    <>
-                      <Ionicons name="person-circle-sharp" size={24} style={styles.colabIcon} />
-                      <Paragraph style={styles.colabText}>Colaborador</Paragraph>
-                    </>
-                  )}
-                </>
-              ) : (
-                <>
-                  <Ionicons name="person-sharp" size={24} style={styles.guestIcon} />
-                  <Paragraph style={styles.guestText}>Visitante</Paragraph>
-                </>
-              )}
-            </View>
-          )}
-          <Title style={styles.title}>Seja Bem-Vindo!</Title>
-          <Title style={styles.subTitle}>Sistema de Compras</Title>
-          <Button mode="contained" style={styles.logoButton}>
-            <Paragraph>Logomarca ACME</Paragraph>
-          </Button>
-          <Paragraph style={styles.rights}>
-            Todos os direitos reservados © <Paragraph>@becker84</Paragraph>.
-          </Paragraph>
-        </Card.Content>
-      </Card>
-    </View>
+    <Grid
+      style={{
+        height: "100%",
+        width: "100%",
+      }}
+    >
+      <Grid>
+        <Topbar title="Home" />
+      </Grid>
+      <Grid style={styles.container}>
+        <Image
+          source={require("../../assets/images/ACME_Logo.png")}
+          style={{
+            width: 250,
+            height: 200,
+            resizeMode: "contain",
+          }}
+        />
+        <Text style={styles.title}>ACME - SISTEMA DE COMPRAS</Text>
+      </Grid>
+    </Grid>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(29, 33, 38, 1)',
-    padding: 16,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    width: "100%",
   },
-  card: {
-    minWidth: 275,
-    margin: 20,
-    padding: 20,
-    borderRadius: 20,
-    backgroundColor: 'rgba(29, 33, 38, 0.4)',
-  },
-  cardContent: {
-    alignItems: 'center',
-  },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  userName: {
-    marginRight: 8,
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'lightgrey',
-  },
-  adminIcon: {
-    color: '#00ff00',
-    marginRight: 8,
-  },
-  colabIcon: {
-    color: '#FDCC0D',
-    marginRight: 8,
-  },
-  colabText: {
-    color: '#FDCC0D',
-  },
-  adminText: {
-    color: '#00ff00',
-  },
-  guestIcon: {
-    color: '#FF5722',
-    marginRight: 8,
-  },
-  guestText: {
-    color: '#FF5722',
-    fontSize: 18,
-    fontWeight: 'bold',
+  content: {
+    width: "90%",
+    alignItems: "center",
   },
   title: {
-    marginTop: 30,
-    marginBottom: 20,
-    fontSize: 24,
-    color: '#f0f0f0',
+    fontSize: 28,
+    fontWeight: "800",
+    marginBottom: 40,
+    color: "rgb(32, 26, 25)",
   },
-  subTitle: {
-    fontSize: 20,
-    color: '#f0f0f0',
+  textInput: {
+    height: 50,
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderColor: "#E8EAF6",
+    borderWidth: 2,
+    borderRadius: 15,
+    marginVertical: 15,
+    paddingHorizontal: 25,
+    fontSize: 16,
+    color: "#3C4858",
+    shadowColor: "#9E9E9E",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
   },
-  logoButton: {
-    marginBottom: 50,
+  button: {
+    width: "100%",
+    marginVertical: 15,
+    backgroundColor: "#d32f2f",
+    padding: 20,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#d32f2f",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  rights: {
-    fontSize: 12,
-    color: 'hsl(215, 15%, 75%)',
+  text: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  switchText: {
+    marginTop: 20,
+    color: "rgb(32, 26, 25)",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
-
-export default Home;

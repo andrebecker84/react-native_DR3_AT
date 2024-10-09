@@ -13,6 +13,7 @@ const Menu = (props: any) => {
                         {
                             props.items.map((item: any, index: number) => {
                                 return <Mn.Item
+                                    key={index}
                                     leadingIcon="redo"
                                     {...item}
                                     onPress={() => {

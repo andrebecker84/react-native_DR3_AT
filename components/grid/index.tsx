@@ -1,33 +1,48 @@
 import * as React from 'react';
 import { Surface } from 'react-native-paper';
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-const Grid = (props: any) => {
-    return props.elevation ?
-            <Surface style={{
-                ...styles.surface,
-                ...props.styleSurface
-            }} elevation={3}>
-                <View style={{
-                    width: '100%',
-                    ...props.style
-                }}>
-                    {props.children}
-                </View>
-            </Surface> :
-            <View style={{
-                width: '100%',
-                ...props.style
-            }}>
-                {props.children}
-            </View>;
+type GridProps = {
+    elevation?: number | null;
+    styleSurface?: object;
+    style?: object;
+    children: React.ReactNode;
 };
 
-Grid.defaultProps = {
-    elevation: null,
-    styleSurface: {},
-    style: {}
-}
+const Grid: React.FC<GridProps> = ({
+    elevation = null,
+    styleSurface = {},
+    style = {},
+    children
+}) => {
+    return elevation ? (
+        <Surface
+            style={{
+                ...styles.surface,
+                ...styleSurface
+            }}
+            elevation={3}
+        >
+            <View
+                style={{
+                    width: '100%',
+                    ...style
+                }}
+            >
+                {children}
+            </View>
+        </Surface>
+    ) : (
+        <View
+            style={{
+                width: '100%',
+                ...style
+            }}
+        >
+            {children}
+        </View>
+    );
+};
 
 export default Grid;
 

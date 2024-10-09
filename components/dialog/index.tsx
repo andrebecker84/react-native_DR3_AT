@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Dialog as Dlg, Portal, Text } from 'react-native-paper';
-import {Button} from "@/components";
+import Button from '../Button';
+
 
 const Dialog = (props: any) => {
     return (

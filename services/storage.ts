@@ -1,6 +1,6 @@
 import {FirebaseStorage, getDownloadURL, ref, getStorage, uploadBytes, deleteObject} from "@firebase/storage";
-import { firebaseApp } from "./firebaseConfig";
-import verifyConnection from "./verificarConexao";
+import { firebaseApp } from "@/services/firebaseConfig";
+import conexao from "@/services/verificarConexao";
 
 
 const uriToBlob = async (uri: string) => {
@@ -10,8 +10,8 @@ const uriToBlob = async (uri: string) => {
 
 const uploadImageToFirebaseStorage = async (uri: string, path: string, name: string) => {
     const imageBlog = await uriToBlob(uri);
-    if (!verifyConnection()) {
-        throw new Error('Sem conexão com a internet');
+    if (!conexao()) {
+        throw new Error('Sem conexão com a internet...');
         return false
     }else{
     try {
@@ -19,9 +19,9 @@ const uploadImageToFirebaseStorage = async (uri: string, path: string, name: str
         const storageRef = ref(storage, `images/${path}/${name}`);
         await uploadBytes(storageRef, imageBlog);
         return await getDownloadURL(storageRef);
-    } catch (err) {
-        console.error(`[uploadImageToFirebaseStorage] >> Error: ${err}`);
-        throw err;
+    } catch (erro) {
+        console.error(`[uploadImageToFirebaseStorage] >> Erro ao enviar imagem: ${erro}`);
+        throw erro;
     }
 }
 }
@@ -31,9 +31,9 @@ const deleteImage = async (path: string, name: string) => {
         const storage: FirebaseStorage = getStorage(firebaseApp);
         const storageRef = ref(storage, `images/${path}/${name}`);
         await deleteObject(storageRef);
-    }catch (err) {
-        console.error(`[deleteImage] > Error: ${err}`);
-        throw err;
+    }catch (erro) {
+        console.error(`[deleteImage] > Erro ao deletar imagem: ${erro}`);
+        throw erro;
     }
 }
 

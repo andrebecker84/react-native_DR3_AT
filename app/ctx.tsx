@@ -1,91 +1,78 @@
-import { useContext, createContext, type PropsWithChildren, useEffect, useState } from 'react';
-import { setStorageItemAsync, useStorageState } from './useStorageState';
-import { router } from "expo-router";
-import { FirebaseApp, initializeApp } from "firebase/app";
-import { login, createLogin, logout } from "@/services/auth";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { firebaseConfig } from "@/services/firebaseConfig";
-
-const firebaseApp: FirebaseApp = initializeApp(firebaseConfig);
-const auth = getAuth(firebaseApp);
+import { useContext, createContext, type PropsWithChildren, useState } from 'react';
+import { useStorageState } from './useStorageState';
+import { router } from 'expo-router';
+import {firebaseApp} from "@/services/firebaseConfig";
+import {createLogin, login, logout} from "@/services/auth";
 
 const AuthContext = createContext<{
-    signIn: (email: string, password: string) => Promise<void>;
-    signOut: () => Promise<void>;
-    signUp: (email: string, password: string, nome: string) => Promise<void>;
-    firebaseApp?: FirebaseApp | null;
-    session?: string | null;
-    isLoading: boolean;
-    changeTheme: (theme: string) => Promise<void>;
-    theme?: string | null;
-    isLoadingTheme: boolean;
-}>(/* initial values */);
+  signIn: (email: string, password: string) => void;
+  signOut: () => void;
+  signUp: (email: string, password: string, nome: string) => void;
+  setId: (id: string | null) => void; //id cotaçao
+  id?: string | null; //id cotaçao
+  setUserEmail: (email: string | null) => void;
+  userEmail?: string | null;
+  firebaseApp?: typeof firebaseApp | null;
+  session?: string | null;
+  isLoading: boolean;
+  isLoadingEmail: boolean;
+}>({
+  signIn: (email: string, password: string) => null,
+  signOut: () => null,
+  signUp: (email: string, password: string, nome: string) => null,
+  setId: () => null, //id cotaçao
+  firebaseApp: firebaseApp,
+  id: null, //id cotaçao
+  session: null,
+  setUserEmail: () => null,
+  userEmail: null,
+  isLoading: false,
+  isLoadingEmail: false,
+});
 
+// This hook can be used to access the user info.
 export function useSession() {
-    const value = useContext(AuthContext);
-    if (process.env.NODE_ENV !== 'production') {
-        if (!value) {
-            throw new Error('useSession must be wrapped in a <SessionProvider />');
-        }
+  const value = useContext(AuthContext);
+  if (process.env.NODE_ENV !== 'production') {
+    if (!value) {
+      throw new Error('useSession must be wrapped in a <SessionProvider />');
     }
-    return value;
+  }
+
+  return value;
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
-    const [[isLoading, session], setSession] = useStorageState('session');
-    const [[isLoadingTheme, theme], setTheme] = useStorageState('theme');
-    const [authIsLoading, setAuthIsLoading] = useState(true);
+  const [[isLoading, session], setSession] = useStorageState('session');
+  const [id, setId] = useState<string | null>(null);
+  const [[isLoadingEmail, userEmail], setUserEmail] = useStorageState('email');
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setSession(user.uid);
-            } else {
-                setSession(null);
-            }
-            setAuthIsLoading(false);
-        });
-        return unsubscribe;
-    }, []);
-
-    return (
-        <AuthContext.Provider
-            value={{
-                signIn: async (email: string, password: string) => {
-                    try {
-                        await login(email, password, setSession);
-                    } catch (error) {
-                        console.error('Error during sign-in:', error);
-                    }
-                },
-                signOut: async () => {
-                    try {
-                        await logout();
-                        setSession(null);
-                        router.replace("/login");
-                    } catch (error) {
-                        console.error('Error during sign-out:', error);
-                    }
-                },
-                signUp: async (email: string, password: string, nome: string) => {
-                    try {
-                        await createLogin(email, password, nome);
-                        router.replace("/login");
-                    } catch (error) {
-                        console.error('Error during sign-up:', error);
-                    }
-                },
-                changeTheme: async (theme: string) => {
-                    await setStorageItemAsync('theme', theme);
-                    setTheme(theme);
-                },
-                firebaseApp: firebaseApp,
-                session,
-                isLoading: isLoading || authIsLoading,
-                theme,
-                isLoadingTheme,
-            }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  return (
+    <AuthContext.Provider
+      value={{
+        signIn: (email: string, password: string) => {
+          return login(email, password, setSession, setUserEmail);
+        },
+        signOut: () => {
+          logout();
+          setSession(null);
+        },
+        signUp: (email: string, password: string, nome: string) => {
+          // Perform sign-up logic here
+          //setSession('xxx');
+          // @ts-ignore
+          //router.replace('(tabs)');
+          return createLogin(email, password, nome);
+        },
+        firebaseApp: firebaseApp,
+        setId,
+        id,
+        session,
+        isLoading,
+        userEmail,
+        isLoadingEmail,
+      }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

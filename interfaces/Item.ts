@@ -19,7 +19,7 @@ export interface ItemImageInterface {
   sync?: number;
 }
 
-export interface Requisicoes {
+export interface Requisicao {
   RID: string;
   dataEdicaoReq: Date | Timestamp;
   dataRequisicao: Date | Timestamp;
@@ -34,7 +34,7 @@ export interface Requisicoes {
   valorUnitario: number;
 }
 
-export interface CadastroCompras {
+export interface CadastroCompra {
   RID: string;
   dataEdicaoReq: Date | Timestamp;
   dataRequisicao: Date | Timestamp;

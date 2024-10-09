@@ -1,23 +1,44 @@
-import {Navigator} from "expo-router";
-import Slot = Navigator.Slot;
-import {SessionProvider, useSession} from "@/app/ctx";
-import {PaperProvider} from "react-native-paper";
-import {useColorScheme} from "react-native";
-import {darkTheme, lightTheme} from "@/constants/Theme";
-import {useStorageState} from "@/app/useStorageState";
+import { Slot } from "expo-router";
+import { SessionProvider, useSession } from "@/app/ctx";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  PaperProvider,
+  adaptNavigationTheme,
+} from "react-native-paper";
+import { Colors } from "@/constants/Colors";
+import {
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+  ThemeProvider
+} from "@react-navigation/native";
+import merge from 'deepmerge';
+import { useTheme } from "@/hooks/useTheme";
+import { useEffect } from "react";
+
+const customDarkTheme = { ...MD3DarkTheme, colors: Colors.dark };
+const customLightTheme = { ...MD3LightTheme, colors: Colors.light };
+
+const { LightTheme, DarkTheme } = adaptNavigationTheme({
+  reactNavigationLight: NavigationDefaultTheme,
+  reactNavigationDark: NavigationDarkTheme,
+});
+
+const CombinedDefaultTheme = merge(LightTheme, customLightTheme);
+const CombinedDarkTheme = merge(DarkTheme, customDarkTheme);
 
 export default function RootLayout() {
-    const themeType = useColorScheme();
-    const [[isLoadingTheme, theme], setTheme] = useStorageState('theme');
-    const themeJson = {
-        'dark': darkTheme,
-        'light': lightTheme
-    }
+  const { colorScheme } = useTheme();
+  const paperTheme = colorScheme === "dark" ? CombinedDarkTheme : CombinedDefaultTheme;
 
-    // @ts-ignore
-    return  <PaperProvider theme={theme === "auto" || theme === null ? themeType === "dark" ? themeJson['dark'] : themeJson['light'] :  themeJson[theme]}>
-                <SessionProvider>
-                    <Slot />
-                </SessionProvider>
-            </PaperProvider>
+  // @ts-ignore
+  return (
+    <PaperProvider theme={paperTheme}>
+      <ThemeProvider value={paperTheme}>
+        <SessionProvider>
+          <Slot />
+        </SessionProvider>
+      </ThemeProvider>
+    </PaperProvider>
+  );
 }

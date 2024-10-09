@@ -1,39 +1,34 @@
 import { router } from "expo-router";
-import { 
-  getAuth, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  createUserWithEmailAndPassword, 
-  updateProfile 
+import {
+  IdTokenResult,
+  signInWithEmailAndPassword,
+  UserCredential,
+  signOut,
+  createUserWithEmailAndPassword,
+  updateProfile,
 } from "@firebase/auth";
+import { auth } from "@/services/firebaseConfig";
 import { addUsuario } from "@/infra/usuarios";
-import { UserInterface } from "@/interfaces/User";
-import { Timestamp } from "firebase/firestore"; // Para suportar Timestamp
 
-const auth = getAuth();
+const login = async (
+  email: string,
+  password: string,
+  setSession: any,
+  setUserEmail: any
+) => {
 
-const login = async (email: string, password: string, setSession: any) => {
   try {
-    const response = await signInWithEmailAndPassword(auth, email, password);
+    const response: UserCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user: any = response.user.toJSON();
-
-    const _user: UserInterface = {
-      uid: user.uid,
-      email: user.email || "",
-      emailVerified: Boolean(user.emailVerified), // Conversão para booleano
-      nome: user.displayName || "",
-      role: user.role, // Supondo que o role seja carregado aqui
-      phoneNumber: user.phoneNumber || "",
-      photoURL: user.photoURL || "",
-      dataCriacao: user.metadata.creationTime ? new Date(user.metadata.creationTime) : Timestamp.now(),
-      sync: 1,
-      blocked: user.blocked || false, // Adicionado suporte para bloqueio
-    };
-
     setSession(user.stsTokenManager.accessToken);
-    return router.replace("(tabs)");
+    setUserEmail(user);
+    router.replace("/(tabs)");
   } catch (error) {
-    console.error('Error during login:', error);
+    console.error("Error during login:", error);
     throw error;
   }
 };
@@ -48,29 +43,34 @@ const logout = async () => {
   }
 };
 
-const createLogin = async (email: string, password: string, nome: string) => {
+const createLogin = async (
+  email: string,
+  password: string,
+  nome: string
+) => {
+
   try {
-    const response = await createUserWithEmailAndPassword(auth, email, password);
+    const response = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user: any = response.user;
-
-    await updateProfile(user, { displayName: nome });
-
-    const newUser: UserInterface = {
-      uid: user.uid,
-      email: user.email,
-      emailVerified: false,
+    await updateProfile(user, {
+      displayName: nome,
+    });
+    const newUser = {
       nome: user.displayName,
-      phoneNumber: "",
-      photoURL: "",
-      dataCriacao: Timestamp.now(),
-      role: 'colaborador', // Role padrão
-      blocked: false, // Usuário não bloqueado ao criar conta
+      email: user.email,
+      ativo: true,
+      telefone: "",
     };
-
     await addUsuario(newUser);
+
     router.replace("/login");
+    
   } catch (error: any) {
-    console.error("Sign up failed:", error);
+    console.log("Sign up failed:", error);
   }
 };
 

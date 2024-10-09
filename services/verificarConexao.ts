@@ -1,6 +1,6 @@
 import * as Network from 'expo-network';
 
-const verifyConnection = async (): Promise<boolean> => {
+const conexao = async (): Promise<boolean> => {
     const airplaneMode: boolean = await Network.isAirplaneModeEnabledAsync();
     const network: any = await Network.getNetworkStateAsync();
     const result = network.isConnected && !airplaneMode;
@@ -8,4 +8,4 @@ const verifyConnection = async (): Promise<boolean> => {
     return result;
 }
 
-export default verifyConnection;
+export default conexao;

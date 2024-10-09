@@ -1,12 +1,13 @@
-import {Appbar, useTheme} from "react-native-paper";
+import {Appbar} from "react-native-paper";
 import {router} from "expo-router";
+import { useTheme } from "@/hooks/useTheme";
 
 const AppBar = (props: any) => {
     const theme = useTheme();
 
     return <Appbar.Header
                 style={{
-                    backgroundColor: theme.colors.background,
+                    backgroundColor: theme.colorScheme === "dark" ? "#121212" : "#f6f6f6",
                 }}
             >
                 {

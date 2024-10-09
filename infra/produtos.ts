@@ -1,15 +1,15 @@
 import { db } from "@/services/firebaseConfig";
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc  } from "firebase/firestore"; 
 
-export async function getProducts() {
+export async function getProdutos() {
     try {
-        const querySnapshot = await getDocs(collection(db, "produtos"));
-        const products: any = [];
+        const querySnapshot = await getDocs(collection(db, 'produtos'));
+        const produtos: any = [];
         querySnapshot.forEach((doc) => {
-            products.push({ id: doc.id, ...doc.data() });
+            produtos.push({ id: doc.id, ...doc.data() });
         });
-        return products;
-    } catch (e) {
-        console.error("Error getting documents: ", e);
+        return produtos;
+    } catch (erro) {
+        console.error("Error ao carregar produtos: ", erro);
     }
 }

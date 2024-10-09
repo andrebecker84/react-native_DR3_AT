@@ -2,7 +2,6 @@ import { Timestamp } from 'firebase/firestore';
 
 export interface UserInterface {
   uid: string;                       // ID único fornecido pelo Firebase Authentication
-  id: string;                        // ID único do documento no Firestore
   email: string;                     // Endereço de e-mail do usuário
   emailVerified: boolean;            // Indicador de verificação de e-mail, alterado para booleano para refletir o tipo Firebase
   nome: string;                      // Nome exibido do usuário

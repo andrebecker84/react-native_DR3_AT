@@ -1,129 +1,191 @@
-import { ScrollView, Pressable } from 'react-native'; // Certifique-se de incluir Pressable aqui
-import { Avatar, Button, Grid, Snackbar, Text, TextInput } from "@/components";
+import {
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Image,
+} from "react-native";
 import { useSession } from "@/app/ctx";
-import { useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Grid, Snackbar, Text, TextInput } from "@/components";
+import { router } from "expo-router";
 
 export default function LoginScreen() {
-    const { signIn } = useSession();
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
-    const [email, setEmail] = useState('tiago@gmail.com');
-    const [password, setPassword] = useState('123456');
-    const [helpData, setHelpData] = useState({
-        email: null,
-        password: null,
-    });
-    const router = useRouter();
+  const { signIn, signUp } = useSession();
 
-    const verifyFields = (text: string, name: string) => {
-        setHelpData((prev: any) => ({
-            ...prev,
-            [name]: text.length === 0 ? "Campo obrigatório" : null,
-        }));
-    };
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [email, setEmail] = useState("colaborador@teste.com");
+  const [password, setPassword] = useState("teste123");
+  const [nome, setNome] = useState("");
+  const [helpData, setHelpData] = useState({
+    email: null,
+    password: null,
+  });
+  const [possuiConta, setPossuiConta] = useState(true);
+  const [forgotPassword, setForgotPassword] = useState(false);
 
-    const handleSignIn = async () => {
-        if (email.length > 0 && password.length > 0) {
-            setLoading(true);
-            try {
-                await signIn(email, password);
-            } catch (error) {
-                const errorMessage = error?.message ?? 'Erro desconhecido';
-                if (errorMessage.includes('auth/invalid-credential')) {
-                    setMessage("Credenciais inválidas.");
-                } else if (errorMessage.includes('auth/user-not-found')) {
-                    setMessage("Usuário não encontrado.");
-                } else if (errorMessage.includes('auth/wrong-password')) {
-                    setMessage("Senha incorreta.");
-                } else {
-                    setMessage("Erro durante o login. Tente novamente.");
-                }
-            } finally {
-                setLoading(false);
-            }
-        } else {
-            setMessage("Preencha todos os campos.");
-            verifyFields(email, 'email');
-            verifyFields(password, 'password');
-        }
-    };
+  const verifyFields = (text: string, name: string) => {
+    setHelpData((v: any) => ({
+      ...v,
+      [name]: text.length === 0 ? "Campo obrigatório" : null,
+    }));
+  };
 
-    return (
-        <>
-            <ScrollView>
-                <Grid style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
-                    <Grid style={{ marginTop: 50, ...styles.container, ...styles.padding }}>
-                        <Avatar size={200} source={require('../assets/images/logo.png')} />
-                    </Grid>
-                    <Grid style={{ ...styles.padding, ...styles.container }}>
-                        <Text style={{ fontSize: 24 }}>Seja Bem-vindo!!!</Text>
-                    </Grid>
-                    <Grid style={styles.padding}>
-                        <TextInput
-                            value={email}
-                            keyboardType="email-address"
-                            onChangeText={(text: string) => {
-                                setEmail(text);
-                                verifyFields(text, 'email');
-                            }}
-                            label="E-mail"
-                            helpText={helpData.email}
-                            error={helpData.email !== null}
-                        />
-                    </Grid>
-                    <Grid style={styles.padding}>
-                        <TextInput
-                            value={password}
-                            onChangeText={(text: string) => {
-                                setPassword(text);
-                                verifyFields(text, 'password');
-                            }}
-                            label="Senha"
-                            secureTextEntry
-                            helpText={helpData.password}
-                            error={helpData.password !== null}
-                        />
-                    </Grid>
-                    <Grid style={{ ...styles.padding, ...styles.container }}>
-                        <Pressable onPress={() => router.push("register")}>
-                            <Text style={{ color: '#0000EE' }}>Criar conta</Text>
-                        </Pressable>
-                    </Grid>
-                    <Grid style={styles.padding}>
-                        <Button
-                            style={{ borderRadius: 0 }}
-                            loading={loading}
-                            mode="contained"
-                            onPress={handleSignIn}
-                        >
-                            Entrar
-                        </Button>
-                    </Grid>
-                    <Grid style={{ ...styles.padding, ...styles.container }}>
-                        <Pressable onPress={() => router.push("forgot-password")}>
-                            <Text style={{ color: '#0000EE' }}>Esqueci minha senha</Text>
-                        </Pressable>
-                    </Grid>
-                </Grid>
-            </ScrollView>
-            <Snackbar
-                visible={message !== null}
-                onDismiss={() => setMessage(null)}
-                duration={5000}
-                text={message}
-            />
-        </>
-    );
+  return (
+    <>
+      <SafeAreaView style={styles.container}>
+        <Grid
+          style={{
+
+            width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+            
+          }}
+        >
+          <Image
+            source={require("@/assets/images/logoACME.png")}
+            style={{
+              width: 250,
+              height: 200,
+              resizeMode: "contain", 
+            }}
+          />
+    
+        </Grid>
+        <View style={styles.content}>
+          <Text style={styles.title}>
+            {possuiConta ? "Login" : "Criar Conta"}
+          </Text>
+          {possuiConta ? null : (
+            <TextInput
+              style={styles.textInput}
+              placeholder="Nome"
+              value={nome}
+              onChangeText={setNome}
+            />  
+          )}
+
+          <TextInput
+            style={styles.textInput}
+            placeholder="email"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={styles.textInput}
+            placeholder="password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+
+          {possuiConta ? (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                signIn(email, password);
+              }}
+            >
+              <Text style={styles.text}>Login</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={async () => {
+                signUp(email, password, nome);
+              }}
+              // onPress={() => {console.log(nome, email, password)}}
+            >
+              <Text style={styles.text}>Criar Conta</Text>
+            </TouchableOpacity>
+          )}
+
+          <TouchableOpacity onPress={() => setPossuiConta(!possuiConta)}>
+            <Text style={styles.switchText}>
+              {possuiConta
+                ? "Não possui uma conta? Criar conta"
+                : "Já possui uma conta? Login"}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => router.replace("/forgot-password")}>
+            <Text style={styles.switchText}>Esqueci minha senha</Text>
+          </TouchableOpacity>
+
+          <Snackbar
+            visible={message !== null}
+            onDismiss={() => setMessage(null)}
+            duration={4000}
+          >
+            {message}
+          </Snackbar>
+        </View>
+      </SafeAreaView>
+    </>
+  );
 }
 
-const styles = {
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    padding: {
-        padding: 16,
-    },
-};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5", // para garantir que o fundo esteja visível
+    width: "100%", // ocupa toda a largura da tela
+  },
+  content: {
+    width: "90%", // ocupa 90% da largura da tela
+    alignItems: "center", // centraliza o conteúdo horizontalmente
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "800",
+    marginBottom: 40,
+    color: "rgb(32, 26, 25)",
+  },
+  textInput: {
+    height: 50,
+    width: "100%", // ocupa toda a largura do content
+    backgroundColor: "#FFFFFF",
+    borderColor: "#E8EAF6",
+    borderWidth: 2,
+    borderRadius: 15,
+    marginVertical: 15,
+    paddingHorizontal: 25,
+    fontSize: 16,
+    color: "#3C4858",
+    shadowColor: "#9E9E9E",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  button: {
+    width: "100%", // o botão também ocupa toda a largura
+    marginVertical: 15,
+    backgroundColor: "#d32f2f",
+    padding: 20,
+    borderRadius: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#d32f2f",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  text: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  switchText: {
+    marginTop: 20,
+    color: "rgb(32, 26, 25)",
+    fontSize: 16,
+    fontWeight: "500",
+  },
+});

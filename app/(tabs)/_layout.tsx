@@ -1,13 +1,11 @@
-import {Redirect, Tabs} from 'expo-router';
-import React, { useEffect } from 'react';
+import { Redirect, Tabs } from "expo-router";
+import React from "react";
 import { TabBarIcon } from "@/components";
 import { useSession } from "@/app/ctx";
 import { Text } from "react-native";
-import { useTheme } from "react-native-paper";
 
 export default function TabLayout() {
   const { session, isLoading } = useSession();
-  const theme = useTheme();
 
   if (isLoading) {
     return <Text>Carregando...</Text>;
@@ -18,15 +16,11 @@ export default function TabLayout() {
   }
 
   return (
-    
     <Tabs
-    screenOptions={{
-      tabBarActiveTintColor: theme.colors.primary,
-      tabBarStyle: {
-          backgroundColor: theme.colors.background,
-      },
-      headerShown: false,
-    }}>
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
