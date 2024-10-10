@@ -3,16 +3,17 @@ import { useState } from "react";
 import { useSession } from "@/app/ctx";
 import AppBar from "./AppBar";
 import Menu from "./Menu";
-import { useTheme } from "@/hooks/useTheme"; // Importa o hook personalizado de tema
-import Ionicons from "react-native-vector-icons/Ionicons"; // Importa Ionicons
+import { useTheme } from "@/hooks/useTheme";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Topbar = ({ title, menu = true, back = false }: any) => {
   const { signOut } = useSession();
   const [visible, setVisible] = useState(false);
   const { colorScheme, toggleTheme } = useTheme(); // Obtém o tema e o alternador de tema
 
-  const temaIcone = colorScheme === "dark" ? "sunny" : "moon"; // Define o ícone baseado no tema
-  const corIcone = colorScheme === "dark" ? "rgb(253, 204, 13)" : "rgb(174, 80, 242)"; // Cor chamativa para cada tema
+  const temaIcone = colorScheme === "dark" ? "sunny" : "moon";
+  const corIcone = colorScheme === "dark" ? "rgb(253, 149, 13)" : "rgb(174, 80, 242)";
+  const corIconesGerais = colorScheme === "dark" ? "#fff" : "#000";
 
   return (
     <>
@@ -21,16 +22,19 @@ const Topbar = ({ title, menu = true, back = false }: any) => {
         icon={menu ? "dots-vertical" : ""}
         onPress={() => setVisible(!visible)}
         back={back}
-        titleStyle={{ color: colorScheme === "dark" ? "#fff" : "#000" }}
+        titleStyle={{ color: colorScheme === "dark" ? "#f0f0f0" : "#000" }}
       />
       {menu ? (
         <Menu
           visible={visible}
           setVisible={setVisible}
+          colorScheme={colorScheme}
           items={[
             {
               title: "Configurações",
-              leadingIcon: "cog-outline",
+              leadingIcon: () => (
+                <Ionicons name="cog" size={24} color={corIconesGerais} />
+              ),
               onPress: () => router.push("/settings"),
             },
             {
@@ -43,8 +47,10 @@ const Topbar = ({ title, menu = true, back = false }: any) => {
               },
             },
             {
-              title: "Logout",
-              leadingIcon: "logout-variant",
+              title: "Sair",
+              leadingIcon: () => (
+                <Ionicons name="log-out-outline" size={24} color={corIconesGerais} />
+              ),
               onPress: async () => {
                 await signOut();
                 setVisible(false);

@@ -31,7 +31,7 @@ export default function SettingsScreen() {
             <Ionicons
               name="sunny"
               size={24}
-              color={colorScheme === "light" ? "#FFD700" : "#888888"}
+              color={colorScheme === "light" ? "rgba(253, 149, 13, 1)" : "#888888"}
               //@ts-ignore
               style={[styles.icon, styles.sunIcon]}
             />
@@ -43,7 +43,7 @@ export default function SettingsScreen() {
             <Ionicons
               name="moon"
               size={24}
-              color={colorScheme === "dark" ? "#FFD700" : "#888888"}
+              color={colorScheme === "dark" ? "rgba(253, 149, 13, 1)" : "#888888"}
             />
           </Grid>
         </Grid>
@@ -56,11 +56,22 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 17,
     fontWeight: "bold",
+    marginBottom: 10,
   },
   switchContainer: {
+    backgroundColor: "#303030",
+    borderRadius: 50,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    shadowColor: "#000", // Cor da sombra
+    shadowOffset: {
+      width: 0,  // Offset da sombra no eixo X
+      height: 2, // Offset da sombra no eixo Y
+    },
+    shadowOpacity: 1, // Opacidade da sombra
+    shadowRadius: 3.5, // Raio da sombra
+    elevation: 10, // Elevação para Android
   },
   switch: {
     marginHorizontal: 16,

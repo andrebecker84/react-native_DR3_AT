@@ -2,7 +2,7 @@ import { Button, Grid, Snackbar, Text, TextInput, TopBar } from "@/components";
 import { addCadastroCompra } from "@/infra/getRequisicoes";
 import { getProdutos } from "@/infra/produtos";
 import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, ScrollView, View } from "react-native";
 import { Dropdown } from "@/components";
 import { useSession } from "@/app/ctx";
 import conexao from "@/services/verificarConexao";
@@ -92,8 +92,9 @@ export default function CriarRequisicoesScreen() {
   }, []);
 
   return (
-    <Grid>
+    <ScrollView>
       <TopBar title="Nova Requisição" />
+      <Grid style={styles.content}>
       <Grid style={styles.card}>
         <Text style={styles.title}>Cadastrar Requisição de Compra</Text>
         <Dropdown
@@ -172,11 +173,18 @@ export default function CriarRequisicoesScreen() {
           duration={5000}
           text={mensagem}
         />
-    </Grid>
+        </Grid>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  content: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+  },
   container: {
     margin: 20,
   },
@@ -202,6 +210,7 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 6,
     padding: 30,
+    width: "90%",
     gap: 12,
   },
 });

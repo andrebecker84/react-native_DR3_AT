@@ -113,7 +113,7 @@ export const Colors = {
     "inversePrimary": "rgb(223, 70, 97)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(85, 33, 48)",
+      "level1": "rgb(115, 33, 48)",
       "level2": "rgb(125, 43, 58)",
       "level3": "rgb(135, 53, 68)",
       "level4": "rgb(145, 63, 78)",
