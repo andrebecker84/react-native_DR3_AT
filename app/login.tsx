@@ -10,16 +10,14 @@ import { Avatar, Button, Grid, Snackbar, TextInput } from "@/components";
 import { Text } from "react-native-paper";
 import { router } from "expo-router";
 
-
 export default function LoginScreen() {
   const { signIn, signUp } = useSession();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [email, setEmail] = useState("colaborador@teste.com");
-  const [password, setPassword] = useState("teste123");
-  const [nome, setNome] = useState("Colaborador");
+  const [email, setEmail] = useState("colaborador@teste.com"); // Preenchido com valor fixo para login
+  const [password, setPassword] = useState("teste123"); // Preenchido com valor fixo para login
+  const [nome, setNome] = useState(""); // Inicialmente vazio na tela de login
   const [possuiConta, setPossuiConta] = useState(true);
-  const [forgotPassword, setForgotPassword] = useState(false);
   const [helpData, setHelpData] = useState({
     nome: null,
     email: null,
@@ -43,26 +41,26 @@ export default function LoginScreen() {
           alignItems: 'center',
           height: '100%'
         }}>
-        <Grid style={{
+          <Grid style={{
             marginTop: 100,
             ...styles.container,
             ...styles.padding,
           }}>
-          <Avatar size={350} bgColor='transparent' source={require("@/assets/images/logoACME.png")}/>
-        </Grid>
-        <Grid style={{...styles.padding}}>
-          {possuiConta && (
-            <Text style={{
-              fontSize: 24,
-              fontWeight: 'bold',
-              color: 'white',
-              textAlign: 'center',
-              letterSpacing: 2,
-            }}>
-              Seja bem-vindo!
-            </Text>
-          )}
-        </Grid>
+            <Avatar size={350} bgColor='transparent' source={require("@/assets/images/logoACME.png")}/>
+          </Grid>
+          <Grid style={{...styles.padding}}>
+            {possuiConta && (
+              <Text style={{
+                fontSize: 24,
+                fontWeight: 'bold',
+                color: 'white',
+                textAlign: 'center',
+                letterSpacing: 2,
+              }}>
+                Seja bem-vindo!
+              </Text>
+            )}
+          </Grid>
           <Text style={{
             fontSize: 24,
             fontWeight: 'bold',
@@ -76,33 +74,33 @@ export default function LoginScreen() {
             }
           </Text>
           {possuiConta ? null : (
-            <Grid style={{...styles.padding}}>
-            <TextInput
-              value={nome}
-              onChangeText={(text: string) => {
-                setNome(text);
-                verifyFields(text, 'nome');
-              }}
-              label="Nome"
-              helpText={helpData.nome}
-              error={helpData.nome !== null}
-            />
-            </Grid>
-          )}
             <Grid>
               <TextInput
-                value={email}
-                keyboardType="email-address"
+                value={nome}
                 onChangeText={(text: string) => {
-                  setEmail(text);
-                  verifyFields(text, 'email');
+                  setNome(text);
+                  verifyFields(text, 'nome');
                 }}
-                label="E-mail"
-                helpText={helpData.email}
-                error={helpData.email !== null}
+                label="Nome"
+                helpText={helpData.nome}
+                error={helpData.nome !== null}
               />
             </Grid>
-            <Grid>
+          )}
+          <Grid>
+            <TextInput
+              value={email}
+              keyboardType="email-address"
+              onChangeText={(text: string) => {
+                setEmail(text);
+                verifyFields(text, 'email');
+              }}
+              label="E-mail"
+              helpText={helpData.email}
+              error={helpData.email !== null}
+            />
+          </Grid>
+          <Grid>
             <TextInput
               value={password}
               onChangeText={(text: string) => {
@@ -114,70 +112,61 @@ export default function LoginScreen() {
               helpText={helpData.password}
               error={helpData.password !== null}
             />
-            </Grid>
-            <Grid style={{...styles.padding}}>
-            <TouchableOpacity onPress={() => router.replace("/forgot-password")}>
-              <Text style={styles.switchText}>Esqueci minha senha</Text>
-            </TouchableOpacity>
-            </Grid>
-            <Grid style={{
-                            ...styles.padding,
-                            ...styles.container,
-                            textAlign: 'center'
-                        }}>
-                            {/*@ts-ignore*/}
-                            <Link href="register">
-                                Criar conta
-                            </Link>
-                        </Grid>
-          {possuiConta ? (
-          <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
-            <Button
-              width={200}
-              icon="login-variant"
-              mode="contained"
-              onPress={async () => {
-                signIn(email, password);
-              }}
-              style={{ backgroundColor: 'rgb(0, 100, 255)' }}
-            >
-              LOGIN
-            </Button>
-            <Button
-              width={200}
-              icon="account-plus"
-              mode="contained"
-              onPress={() => setPossuiConta(!possuiConta)}
-              style={{ backgroundColor: 'rgb(223, 70, 97)' }}
-            >
-              CRIAR CONTA
-            </Button>
           </Grid>
+          {possuiConta ? (
+            <Grid style={{...styles.padding}}>
+              <TouchableOpacity onPress={() => router.replace("/forgot-password")}>
+                <Text style={styles.switchText}>Esqueci minha senha</Text>
+              </TouchableOpacity>
+            </Grid>
+          ) : null}
+          {possuiConta ? (
+            <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
+              <Button
+                width={200}
+                icon="login-variant"
+                mode="contained"
+                onPress={async () => {
+                  signIn(email, password);
+                }}
+                style={{ backgroundColor: 'rgb(0, 100, 255)' }}
+              >
+                LOGIN
+              </Button>
+              <Button
+                width={200}
+                icon="account-plus"
+                mode="contained"
+                onPress={() => setPossuiConta(!possuiConta)}
+                style={{ backgroundColor: 'rgb(223, 70, 97)' }}
+              >
+                CRIAR CONTA
+              </Button>
+            </Grid>
           ) : (
             <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
-            <Button
-              width={200}
-              icon="account-plus"
-              mode="contained"
-              onPress={async () => {
-                signUp(nome, email, password);
-              }}
-              style={{ backgroundColor: 'rgb(0, 100, 255)' }}
-            >
-              CRIAR CONTA
-            </Button>
-          </Grid>
+              <Button
+                width={200}
+                icon="account-plus"
+                mode="contained"
+                onPress={async () => {
+                  signUp(nome, email, password);
+                }}
+                style={{ backgroundColor: 'rgb(0, 100, 255)' }}
+              >
+                CRIAR CONTA
+              </Button>
+            </Grid>
           )}
 
           <TouchableOpacity onPress={() => setPossuiConta(!possuiConta)}>
             <Text style={styles.switchText}>
               {possuiConta
-                ? "Não possui uma conta? Criar conta."
+                ? ""
                 : "Já possui uma conta? Login"}
             </Text>
           </TouchableOpacity>
           
-
           <Snackbar
             visible={message !== null}
             onDismiss={() => setMessage(null)}
@@ -205,7 +194,6 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: {
-    // width: "100%",
     backgroundColor: "rgb(223, 70, 97)",
     padding: 10,
     paddingRight: 40,

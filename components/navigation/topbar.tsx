@@ -3,10 +3,16 @@ import { useState } from "react";
 import { useSession } from "@/app/ctx";
 import AppBar from "./AppBar";
 import Menu from "./Menu";
+import { useTheme } from "@/hooks/useTheme"; // Importa o hook personalizado de tema
+import Ionicons from "react-native-vector-icons/Ionicons"; // Importa Ionicons
 
 const Topbar = ({ title, menu = true, back = false }: any) => {
   const { signOut } = useSession();
   const [visible, setVisible] = useState(false);
+  const { colorScheme, toggleTheme } = useTheme(); // Obtém o tema e o alternador de tema
+
+  const temaIcone = colorScheme === "dark" ? "sunny" : "moon"; // Define o ícone baseado no tema
+  const corIcone = colorScheme === "dark" ? "rgb(253, 204, 13)" : "rgb(174, 80, 242)"; // Cor chamativa para cada tema
 
   return (
     <>
@@ -15,6 +21,7 @@ const Topbar = ({ title, menu = true, back = false }: any) => {
         icon={menu ? "dots-vertical" : ""}
         onPress={() => setVisible(!visible)}
         back={back}
+        titleStyle={{ color: colorScheme === "dark" ? "#fff" : "#000" }}
       />
       {menu ? (
         <Menu
@@ -23,18 +30,23 @@ const Topbar = ({ title, menu = true, back = false }: any) => {
           items={[
             {
               title: "Configurações",
-              leadingIcon: "cog",
+              leadingIcon: "cog-outline",
+              onPress: () => router.push("/settings"),
+            },
+            {
+              title: colorScheme === "dark" ? "Tema Claro" : "Tema Escuro",
+              leadingIcon: () => (
+                <Ionicons name={temaIcone} size={24} color={corIcone} />
+              ),
               onPress: () => {
-                router.push("/settings");
+                toggleTheme(); // Alterna o tema ao clicar
               },
             },
             {
               title: "Logout",
-              leadingIcon: "logout",
+              leadingIcon: "logout-variant",
               onPress: async () => {
-                console.log("Tentando fazer logout");
                 await signOut();
-                console.log("Logout realizado");
                 setVisible(false);
               },
             },

@@ -20,7 +20,7 @@ export async function addUsuario(novoUsuario: any) {
 
   export async function getUsuario() {
     try {
-      const querySnapshot = await getDocs(collection(db, "usuario"));
+      const querySnapshot = await getDocs(collection(db, "usuarios"));
       const users: any = [];
       querySnapshot.forEach((doc) => {
         users.push({ id: doc.id, ...doc.data() });

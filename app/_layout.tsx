@@ -14,7 +14,6 @@ import {
 } from "@react-navigation/native";
 import merge from 'deepmerge';
 import { useTheme } from "@/hooks/useTheme";
-import { useEffect } from "react";
 
 const customDarkTheme = { ...MD3DarkTheme, colors: Colors.dark };
 const customLightTheme = { ...MD3LightTheme, colors: Colors.light };

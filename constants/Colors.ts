@@ -40,6 +40,8 @@ export const Colors = {
     "onPrimary": "#F8F8FF", // contraste com vermelho
     "primaryContainer": "rgb(255, 218, 214)", // container em tom mais claro
     "onPrimaryContainer": "rgb(115, 33, 48)", // contraste com o container principal
+    "textPrimary": "rgb(0, 0, 0)", // cor do texto principal (preto)
+    "textSecondary": "rgb(115, 33, 48)", // cor do texto secundário
     "secondary": "rgb(118, 115, 123)", // cinza escuro
     "onSecondary": "#F8F8FF", // contraste para o secundário
     "secondaryContainer": "rgb(192, 191, 195)", // cinza claro
@@ -56,7 +58,7 @@ export const Colors = {
     "onBackground": "rgb(32, 35, 48)", // contraste com fundo
     "surface": "#F8F8FF", // mesma cor de fundo
     "onSurface": "rgb(192,191,195)", // contraste na superfície
-    "surfaceVariant": "#F8F8FF", // variante de cinza claro
+    "surfaceVariant": "rgb(24, 26, 35)", // variante de cinza claro
     "onSurfaceVariant": "rgb(118, 115, 123)", // contraste para a variante
     "outline": "rgb(160, 140, 138)", // cor para bordas
     "outlineVariant": "rgb(216, 194, 191)", // variante da borda
@@ -82,6 +84,8 @@ export const Colors = {
     "onPrimary": "rgb(115, 33, 48)", // contraste escuro
     "primaryContainer": "rgb(115, 33, 48)", // container mais escuro
     "onPrimaryContainer": "rgb(255, 218, 214)", // contraste com o container
+    "textPrimary": "#F8F8FF", // cor do texto principal (branco)
+    "textSecondary": "rgb(192, 191, 195)", // cor do texto secundário
     "secondary": "rgb(192, 191, 195)", // cinza claro
     "onSecondary": "rgb(15, 18, 20)", // contraste para secundário
     "secondaryContainer": "rgb(118, 115, 123)", // cinza médio
@@ -109,7 +113,7 @@ export const Colors = {
     "inversePrimary": "rgb(223, 70, 97)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(115, 33, 48)",
+      "level1": "rgb(85, 33, 48)",
       "level2": "rgb(125, 43, 58)",
       "level3": "rgb(135, 53, 68)",
       "level4": "rgb(145, 63, 78)",

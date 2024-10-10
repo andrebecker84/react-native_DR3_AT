@@ -251,6 +251,7 @@ const styles = {
   containerImage: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 50,
   },
   padding: {
     padding: 12,

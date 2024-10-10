@@ -32,7 +32,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
 const styles = StyleSheet.create({
   dropdownContainer: {
-    width: "100%",
+    margin: 20,
     backgroundColor: 'rgb(29, 33, 38)',
     borderColor: 'rgb(223, 70, 97)',
     borderWidth: 1,
