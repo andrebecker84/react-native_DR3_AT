@@ -1,8 +1,14 @@
 import * as React from 'react';
-import { HelperText, TextInput as TIp } from 'react-native-paper';
+import { HelperText, TextInput as TIp, TextInputProps } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 
-const TextInput = (props) => {
+// Definindo a interface para as propriedades do TextInput
+interface CustomTextInputProps extends TextInputProps {
+  helpText?: string | null;
+  width?: string;
+}
+
+const TextInput: React.FC<CustomTextInputProps> = (props) => {
   return (
     <>
       <TIp {...props} style={[styles.textInput, props.style]} />

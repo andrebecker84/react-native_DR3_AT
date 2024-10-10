@@ -19,6 +19,7 @@ import {
 } from "@/infra/usuarios";
 import { ScrollView } from "react-native";
 import { uploadImageToFirebaseStorage } from "@/services/storage";
+// @ts-ignore
 import minhaImagem from "../../assets/images/criarConta.png";
 
 export default function PerfilScreen() {
@@ -104,7 +105,8 @@ export default function PerfilScreen() {
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const selectedImage = result.assets[0].uri;
-      setPhotoURL(selectedImage);
+      // setPhotoURL(selectedImage);
+      setPhotoURL(selectedImage || ""); // Garante que é sempre uma string
     }
   };
 
@@ -115,33 +117,51 @@ export default function PerfilScreen() {
 
   const _update = async () => {
     setLoading(true);
-    const im = photoURL.split("/");
-    const newImg = await uploadImageToFirebaseStorage(photoURL, email, im[im.length - 1])
-    setPhotoURL(newImg);
-    const user = {
-      nome,
-      photoURL: newImg,
-    };
-    await updateUserAuthentication(user);
+    try {
+        const im = photoURL.split("/");
+        const newImg = await uploadImageToFirebaseStorage(photoURL, email, im[im.length - 1]);
 
-    const userFone = await getUsuario();
-    const usuarioEncontrado = userFone.find(
-      (user: any) => user.email === email
-    );
+        // Verifica se newImg é uma string antes de definir
+        if (typeof newImg === 'string') {
+            setPhotoURL(newImg);
+        } else {
+            console.error('Erro ao obter a nova imagem:', newImg);
+            setMessage("Erro ao atualizar a imagem.");
+            setLoading(false);
+            return; // Interrompe a execução se a imagem não for válida
+        }
 
-    if (usuarioEncontrado) {
-      const dadosTelefone = {
-        id: usuarioEncontrado.id,
-        telefone: telefone,
-      };
-      console.log(dadosTelefone);
-      await updateUsuario(dadosTelefone); 
+        const user = {
+            nome,
+            photoURL: newImg,
+        };
+        
+        // Atualiza a autenticação do usuário
+        await updateUserAuthentication(user);
+
+        const userFone = await getUsuario();
+        const usuarioEncontrado = userFone.find(
+            (user: any) => user.email === email
+        );
+
+        if (usuarioEncontrado) {
+            const dadosTelefone = {
+                id: usuarioEncontrado.id,
+                telefone,
+            };
+            console.log(dadosTelefone);
+            await updateUsuario(dadosTelefone);
+        }
+
+        dados(); // Atualiza os dados do usuário
+        setMessage("Dados atualizados com sucesso!");
+    } catch (error) {
+        console.error('Erro durante a atualização:', error);
+        setMessage("Erro ao atualizar os dados.");
+    } finally {
+        setLoading(false); // Garante que o loading seja desativado ao final
     }
-
-    dados();
-    setMessage("Dados atualizados com sucesso!");
-    setLoading(false);
-  };
+};
 
   return (
     <>

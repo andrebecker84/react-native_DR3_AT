@@ -8,6 +8,7 @@ interface AvatarProps {
   bgColor?: string;
   color?: string;
   style?: object;
+  size?: number;
 }
 
 // @ts-ignore
