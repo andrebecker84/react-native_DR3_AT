@@ -23,7 +23,7 @@ export default function MinhasRequisicoesScreen() {
       (item: ItemInterface) => item.solicitante.email === userEmail.email
     );
     const filteredData3 = filteredData2.filter(
-      (item: ItemInterface) => item.status === "aberta"
+      (item: ItemInterface) => item.status === "Aberta"
     );
     setObj([...filteredData, ...filteredData3]);
   };
@@ -47,7 +47,7 @@ export default function MinhasRequisicoesScreen() {
           <View style={styles.card}>
             <View style={styles.container}>
               <Text style={styles.title}>
-                Requisições de {user.nome}
+                Requisições de {userEmail.nome}
               </Text>
               <DataTable data={obj} onInfoPress={handleInfoPress} />
             </View>
