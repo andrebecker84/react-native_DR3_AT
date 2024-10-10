@@ -17,21 +17,21 @@ const TextInput = (props) => {
 
 TextInput.defaultProps = {
   helpText: null,
+  width: "100%",
 };
 
 const styles = StyleSheet.create({
   textInput: {
-    width: "85%",
+    margin: 20,
     backgroundColor: "rgb(29, 33, 38)",
     borderWidth: 1,
     borderColor: "rgb(223, 70, 97)",
     borderRadius: 5,
     marginVertical: 8,
-    shadowColor: "rgb(223, 70, 97)",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowColor: "rgb(255, 60, 97)",
+    // shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 6,
   },
 });
 

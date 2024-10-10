@@ -11,7 +11,7 @@ export default function SettingsScreen() {
     <Grid>
       <TopBar title="Configurações" back={true} menu={false} />
       <View style={{ margin: 16 }}>
-        <Button icon="repeat" mode="outlined" onPress={toggleTheme}>
+        <Button icon="repeat" mode="contained" onPress={toggleTheme}>
           {colorScheme === "light" ? "Dark" : "Light"} Theme
         </Button>
       </View>

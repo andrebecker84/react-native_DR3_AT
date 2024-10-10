@@ -5,7 +5,7 @@ export const useTheme = () => {
   const router = useRouter();
   const { colorScheme: globalColorScheme } = useGlobalSearchParams();
   const [localColorScheme, setLocalColorScheme] = useState(
-    globalColorScheme || "light",
+    globalColorScheme || "dark",
   );
 
   useEffect(() => {

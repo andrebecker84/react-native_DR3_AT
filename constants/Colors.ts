@@ -67,11 +67,11 @@ export const Colors = {
     "inversePrimary": "rgb(186, 26, 32)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(36, 46, 80)",
-      "level2": "rgb(46, 56, 100)",
-      "level3": "rgb(56, 66, 120)",
-      "level4": "rgb(66, 76, 140)",
-      "level5": "rgb(76, 86, 160)"
+      "level1": "rgb(20, 19, 21)",
+      "level2": "rgb(30, 31, 34)",
+      "level3": "rgb(43, 45, 49)",
+      "level4": "rgb(64, 67, 73)",
+      "level5": "rgb(75, 77, 85)"
     },
     "surfaceDisabled": "rgba(32, 35, 48, 0.12)",
     "onSurfaceDisabled": "rgba(32, 35, 48, 0.38)",
@@ -98,7 +98,7 @@ export const Colors = {
     "onBackground": "#F8F8FF", // contraste para o fundo
     "surface": "rgb(24, 26, 35)", // mesma cor de fundo
     "onSurface": "rgb(10, 0, 30)", // contraste na superfície
-    "surfaceVariant": "rgb(118, 115, 123)", // variante de cinza médio
+    "surfaceVariant": "rgb(29, 33, 38)", // variante de cinza médio
     "onSurfaceVariant": "#F8F8FF", // contraste para a variante
     "outline": "rgb(59, 63, 68)", // cor para bordas
     "outlineVariant": "rgb(29, 33, 38)", // variante da borda
@@ -109,11 +109,11 @@ export const Colors = {
     "inversePrimary": "rgb(223, 70, 97)", // cor primária invertida
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(20, 19, 21)",
-      "level2": "rgb(30, 31, 34)",
-      "level3": "rgb(43, 45, 49)",
-      "level4": "rgb(64, 67, 73)",
-      "level5": "rgb(75, 77, 85)"
+      "level1": "rgb(115, 33, 48)",
+      "level2": "rgb(125, 43, 58)",
+      "level3": "rgb(135, 53, 68)",
+      "level4": "rgb(145, 63, 78)",
+      "level5": "rgb(155, 73, 88)"
     },
     "surfaceDisabled": "rgba(192, 191, 195, 0.12)",
     "onSurfaceDisabled": "rgba(192, 191, 195, 0.38)",

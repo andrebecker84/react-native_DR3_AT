@@ -35,7 +35,7 @@ export default function TabLayout() {
           title: "Início",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "planet" : "home-outline"}
+              name={focused ? "planet-sharp" : "planet-outline"}
               color={color}
             />
           ),
@@ -47,7 +47,7 @@ export default function TabLayout() {
           title: "Perfil",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "person" : "person-sharp"}
+              name={focused ? "person-circle-sharp" : "person-circle-outline"}
               color={color}
             />
           ),
@@ -59,7 +59,7 @@ export default function TabLayout() {
           title: "Requisição Compra",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "add" : "cart-sharp"}
+              name={focused ? "cart" : "cart-outline"}
               color={color}
             />
           ),
@@ -71,7 +71,7 @@ export default function TabLayout() {
           title: "Lista de Requisições",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "list" : "list-circle-sharp"}
+              name={focused ? "list-circle" : "list-circle-outline"}
               color={color}
             />
           ),

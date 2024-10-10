@@ -19,6 +19,7 @@ import {
 } from "@/infra/usuarios";
 import { ScrollView } from "react-native";
 import { uploadImageToFirebaseStorage } from "@/services/storage";
+import minhaImagem from "../../assets/images/criarConta.png";
 
 export default function PerfilScreen() {
   const [cameraVisible, setCameraVisible] = useState(false);
@@ -161,9 +162,13 @@ export default function PerfilScreen() {
                 }}
               >
                 {photoURL ? (
-                  <Avatar size={230} source={{ uri: photoURL }} />
+                  <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                    <Avatar size={200} source={{ uri: photoURL }} />
+                  </Grid>
                 ) : (
-                  <Avatar size={230} icon="account" />
+                  <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: -50 }}>
+                    <Avatar bgColor="transparent" size={300} source={minhaImagem} />
+                  </Grid>
                 )}
                 <Fab
                   onPress={pickImage}
@@ -184,56 +189,45 @@ export default function PerfilScreen() {
               </Grid>
             </Grid>
           </Grid>
-          <Grid
-            style={{
-              marginTop: 30,
-              ...styles.padding,
-            }}
-          >
+          
+          <Grid style={{ marginTop: 30 }}>
             <TextInput
               disabled={true}
               label="ID"
               value={id}
             />
           </Grid>
-          <Grid
-            style={{
-              ...styles.padding,
-            }}
-          >
+
+          <Grid>
             <TextInput
               disabled={true}
               label="Email"
               value={email}
             />
           </Grid>
-          <Grid
-            style={{
-              ...styles.padding,
-            }}
-          >
+          
+          <Grid>
             <TextInput label="Nome" value={nome} onChangeText={setNome} />
           </Grid>
 
-          <Grid
-            style={{
-              ...styles.padding,
-            }}
-          >
+          <Grid style={{ marginBottom: 30 }}>
             <TextInput
               label="Telefone"
               value={telefone}
               onChangeText={setTelefone}
             />
           </Grid>
-          <Grid
-            style={{
-              ...styles.padding,
-            }}
+          
+          <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center' }}>
+          <Button
+              width={250}
+              loading={loading}
+              onPress={_update}
+              mode="contained"
+              icon={telefone ? "content-save" : "account-plus"}
           >
-            <Button loading={loading} onPress={_update} mode="contained">
               {telefone ? "Atualizar" : "Cadastrar"}
-            </Button>
+          </Button>
           </Grid>
         </Grid>
         <Snackbar
@@ -257,7 +251,6 @@ const styles = {
   containerImage: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
   },
   padding: {
     padding: 12,
@@ -265,7 +258,7 @@ const styles = {
     paddingRight: 30,
   },
   containerCenterImage: {
-    width: 230,
+    width: 200,
     position: "relative",
   },
   fab: {

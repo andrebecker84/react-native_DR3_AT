@@ -23,5 +23,6 @@ export {default as Dialog } from './Dialog'
 export {default as Camera } from './Camera'
 export {default as DataTable } from './DataTable'
 export {default as CotacaoTable } from './DataTable/cotacaoTable'
+export {default as Dropdown } from './Dropdown'
 
 

@@ -89,7 +89,7 @@ export default function LoginScreen() {
             />
             </Grid>
           )}
-            <Grid style={{ ...styles.textInput, ...styles.padding }}>
+            <Grid>
               <TextInput
                 value={email}
                 keyboardType="email-address"
@@ -102,7 +102,7 @@ export default function LoginScreen() {
                 error={helpData.email !== null}
               />
             </Grid>
-            <Grid style={{...styles.padding}}>
+            <Grid>
             <TextInput
               value={password}
               onChangeText={(text: string) => {
@@ -131,23 +131,42 @@ export default function LoginScreen() {
                             </Link>
                         </Grid>
           {possuiConta ? (
-            <TouchableOpacity
-              style={styles.button}
+          <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <Button
+              width={200}
+              icon="login-variant"
+              mode="contained"
               onPress={async () => {
                 signIn(email, password);
               }}
+              style={{ backgroundColor: 'rgb(0, 100, 255)' }}
             >
-              <Text style={styles.text}>Login</Text>
-            </TouchableOpacity>
+              LOGIN
+            </Button>
+            <Button
+              width={200}
+              icon="account-plus"
+              mode="contained"
+              onPress={() => setPossuiConta(!possuiConta)}
+              style={{ backgroundColor: 'rgb(223, 70, 97)' }}
+            >
+              CRIAR CONTA
+            </Button>
+          </Grid>
           ) : (
-            <TouchableOpacity
-              style={styles.button}
+            <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <Button
+              width={200}
+              icon="account-plus"
+              mode="contained"
               onPress={async () => {
-                signUp(email, password, nome);
+                signUp(nome, email, password);
               }}
+              style={{ backgroundColor: 'rgb(0, 100, 255)' }}
             >
-              <Text style={styles.text}>Criar Conta</Text>
-            </TouchableOpacity>
+              CRIAR CONTA
+            </Button>
+          </Grid>
           )}
 
           <TouchableOpacity onPress={() => setPossuiConta(!possuiConta)}>

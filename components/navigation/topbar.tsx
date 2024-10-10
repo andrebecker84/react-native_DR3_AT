@@ -22,7 +22,7 @@ const Topbar = ({ title, menu = true, back = false }: any) => {
           setVisible={setVisible}
           items={[
             {
-              title: "Settings",
+              title: "Configurações",
               leadingIcon: "cog",
               onPress: () => {
                 router.push("/settings");
@@ -31,8 +31,11 @@ const Topbar = ({ title, menu = true, back = false }: any) => {
             {
               title: "Logout",
               leadingIcon: "logout",
-              onPress: () => {
-                signOut();
+              onPress: async () => {
+                console.log("Tentando fazer logout");
+                await signOut();
+                console.log("Logout realizado");
+                setVisible(false);
               },
             },
           ]}

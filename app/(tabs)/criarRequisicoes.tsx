@@ -3,7 +3,7 @@ import { addCadastroCompra } from "@/infra/getRequisicoes";
 import { getProdutos } from "@/infra/produtos";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Dropdown } from "react-native-paper-dropdown";
+import { Dropdown } from "@/components";
 import { useSession } from "@/app/ctx";
 import conexao from "@/services/verificarConexao";
 import dayjs from "dayjs";
@@ -94,9 +94,8 @@ export default function CriarRequisicoesScreen() {
   return (
     <Grid>
       <TopBar title="Nova Requisição" />
-      
       <Grid style={styles.card}>
-        <Text style={styles.title}>Requisição de Compra</Text>
+        <Text style={styles.title}>Cadastrar Requisição de Compra</Text>
         <Dropdown
           label="Prioridade"
           placeholder="Selecione a prioridade"
@@ -135,9 +134,16 @@ export default function CriarRequisicoesScreen() {
          {/* Date Picker para Data de Requisição */}
         <View style={{ marginBottom: 20 }}>
           <Text style={styles.texto}>Escolha a Data de Requisição:</Text>
-          <Button style={{ marginTop: 6, backgroundColor: "rgb(0, 0, 45)" }} icon="calendar" mode="outlined" onPress={() => setShowDataRequisicaoPicker(true)}>
-            {dayjs(dataRequisicao).format("DD/MM/YYYY HH:mm")}
-          </Button>
+            <Button 
+              style={{ marginTop: 6, backgroundColor: "rgb(0, 0, 45)" }} 
+              icon="calendar" 
+              corIcone="rgba(226, 29, 72, 1)"
+              corTexto="rgba(226, 29, 72, 1)"
+              mode="outlined" 
+              onPress={() => setShowDataRequisicaoPicker(true)}
+            >
+              {dayjs(dataRequisicao).format("DD/MM/YYYY HH:mm")}
+            </Button>
           {showDataRequisicaoPicker && (
             <DateTimePicker
               value={dataRequisicao}
@@ -151,13 +157,13 @@ export default function CriarRequisicoesScreen() {
           )}
         </View>
         <Button
-          icon="add-circle-sharp"
-          mode="contained"
+          icon="cart-plus" 
+          mode="contained" 
           onPress={() => {
             handleSubmit();
           }}
         >
-          Enviar
+          Cadastrar Requisição
         </Button>
       </Grid>
       <Snackbar
@@ -179,6 +185,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
+    marginBottom: 20,
   },
   texto: {
     color: "rgb(220,220,220)",
