@@ -43,7 +43,7 @@ export default function SettingsScreen() {
             <Ionicons
               name="moon"
               size={24}
-              color={colorScheme === "dark" ? "rgba(253, 149, 13, 1)" : "#888888"}
+              color={colorScheme === "dark" ? "rgb(174, 80, 242)" : "#888888"}
             />
           </Grid>
         </Grid>

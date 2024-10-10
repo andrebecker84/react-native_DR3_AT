@@ -11,42 +11,35 @@ interface AvatarProps {
   size?: number;
 }
 
-// @ts-ignore
-const Avatar = (props: AvatarProps) => {
-    const detectTypeAvatar = (props: any) => {
-        if(props.source){
-            return <Av.Image
-                        style={{
-                            ...props.style,
-                            backgroundColor: props.bgColor
-                        }}
-                        {...props} />;
-        }else if (props.icon) {
-            return <Av.Icon
-                        style={{
-                            ...props.style,
-                            backgroundColor: props.bgColor
-                        }}
-                        {...props} />;
-        }else{
-            return <Av.Text
-                        style={{
-                            ...props.style,
-                            backgroundColor: props.bgColor
-                        }}
-                        {...props} />;
-        }
+const Avatar = ({
+  source = null,
+  icon,
+  label = 'XD',
+  bgColor = "rgb(223, 70, 97)",
+  color = "#333",
+  style,
+  size = 100,
+  ...rest
+}: AvatarProps) => {
+  const commonStyles = {
+    backgroundColor: bgColor,
+    width: size,
+    height: size,
+    justifyContent: 'center',
+    alignItems: 'center',
+  };
+
+  const detectTypeAvatar = () => {
+    if (source) {
+      return <Av.Image source={source} size={size} style={[commonStyles, style]} {...rest} />;
+    } else if (icon) {
+      return <Av.Icon icon={icon} color={color} size={size} style={[commonStyles, style]} {...rest} />;
+    } else {
+      return <Av.Text label={label} color={color} style={[commonStyles, style]} {...rest} />;
     }
+  };
 
-    // @ts-ignore
-    return detectTypeAvatar(props);
+  return detectTypeAvatar();
 };
-
-Avatar.defaultProps = {
-    source: null,
-    label: 'XD',
-    bgColor: "rgb(223, 70, 97)",
-    color: "#333",
-}
 
 export default Avatar;

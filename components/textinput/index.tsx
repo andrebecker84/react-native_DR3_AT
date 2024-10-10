@@ -1,29 +1,29 @@
 import * as React from 'react';
 import { HelperText, TextInput as TIp, TextInputProps } from 'react-native-paper';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 
 // Definindo a interface para as propriedades do TextInput
 interface CustomTextInputProps extends TextInputProps {
   helpText?: string | null;
-  width?: string;
+  width?: ViewStyle['width'];
 }
 
-const TextInput: React.FC<CustomTextInputProps> = (props) => {
+const TextInput: React.FC<CustomTextInputProps> = ({
+  helpText = null,
+  width = "auto",
+  style,
+  ...props
+}) => {
   return (
     <>
-      <TIp {...props} style={[styles.textInput, props.style]} />
-      {props.helpText ? (
+      <TIp {...props} style={[styles.textInput, style, { width }]} />
+      {helpText ? (
         <HelperText type="error" visible={true}>
-          {props.helpText}
+          {helpText}
         </HelperText>
       ) : null}
     </>
   );
-};
-
-TextInput.defaultProps = {
-  helpText: null,
-  width: "100%",
 };
 
 const styles = StyleSheet.create({
@@ -35,9 +35,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 8,
     shadowColor: "rgb(255, 60, 97)",
-    // shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 1,
+    shadowRadius: 20,
+    elevation: 5,
   },
 });
 

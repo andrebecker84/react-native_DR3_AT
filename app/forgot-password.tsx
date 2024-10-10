@@ -63,11 +63,12 @@ export default function ForgotPasswordScreen() {
                   color: 'white',
                   textAlign: 'center',
                   letterSpacing: 2,
+                  margin: 30
                 }}>
-                  Redefinição de senha...
+                  Redefinir senha:
                 </Text>
             </Grid>
-            <Grid>
+            <Grid style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <TextInput
                 value={email}
                 keyboardType="email-address"
@@ -78,11 +79,12 @@ export default function ForgotPasswordScreen() {
                 label="E-mail"
                 helpText={helpData.email}
                 error={helpData.email !== null}
+                width = "70%"
               />
             </Grid>
             <Grid style={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', gap: 20, marginTop: 20}}>
               <Button
-                width={300}
+                width={200}
                 icon="key-outline"
                 mode="contained"
                 // onPress={resetSenha}
