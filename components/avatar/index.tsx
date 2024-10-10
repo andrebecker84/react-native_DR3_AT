@@ -10,27 +10,42 @@ interface AvatarProps {
   style?: object;
 }
 
-// Usar parâmetros padrão diretamente na função
-const Avatar = ({
-  source = null,
-  label = 'XD',
-  bgColor = "rgb(223, 70, 97)",
-  color = "#333",
-  style = {},
-  ...props
-}: AvatarProps) => {
-
-  const detectTypeAvatar = () => {
-    if (source) {
-      return <Av.Image style={{ ...style, backgroundColor: bgColor }} source={source} {...props} />;
-    } else if (props.icon) {
-      return <Av.Icon style={{ ...style, backgroundColor: bgColor }} icon={props.icon} {...props} />;
-    } else {
-      return <Av.Text style={{ ...style, backgroundColor: bgColor }} label={label} {...props} />;
+// @ts-ignore
+const Avatar = (props: AvatarProps) => {
+    const detectTypeAvatar = (props: any) => {
+        if(props.source){
+            return <Av.Image
+                        style={{
+                            ...props.style,
+                            backgroundColor: props.bgColor
+                        }}
+                        {...props} />;
+        }else if (props.icon) {
+            return <Av.Icon
+                        style={{
+                            ...props.style,
+                            backgroundColor: props.bgColor
+                        }}
+                        {...props} />;
+        }else{
+            return <Av.Text
+                        style={{
+                            ...props.style,
+                            backgroundColor: props.bgColor
+                        }}
+                        {...props} />;
+        }
     }
-  };
 
-  return detectTypeAvatar();
+    // @ts-ignore
+    return detectTypeAvatar(props);
 };
+
+Avatar.defaultProps = {
+    source: null,
+    label: 'XD',
+    bgColor: "rgb(223, 70, 97)",
+    color: "#333",
+}
 
 export default Avatar;
