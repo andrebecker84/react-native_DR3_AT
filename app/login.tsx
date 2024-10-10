@@ -23,6 +23,12 @@ export default function LoginScreen() {
     email: null,
     password: null,
   });
+  const [imageSource, setImageSource] = useState(require("@/assets/images/logoACME.png"));
+
+  const handleCreateAccount = () => {
+    // Defina a nova imagem aqui, você pode ter várias imagens para alternar
+    setImageSource(require("@/assets/images/criarConta.png"));
+  };
 
   const verifyFields = (text: string, name: string) => {
     setHelpData((v: any) => ({
@@ -46,7 +52,7 @@ export default function LoginScreen() {
             ...styles.container,
             ...styles.padding,
           }}>
-            <Avatar size={350} bgColor='transparent' source={require("@/assets/images/logoACME.png")}/>
+            <Avatar size={350} bgColor='transparent' source={imageSource}/>
           </Grid>
           <Grid style={{...styles.padding}}>
             {possuiConta && (
@@ -121,52 +127,69 @@ export default function LoginScreen() {
             </Grid>
           ) : null}
           {possuiConta ? (
-            <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <Grid style={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', gap: 20, marginTop: 20}}>
               <Button
-                width={200}
+                width={300}
                 icon="login-variant"
                 mode="contained"
                 onPress={async () => {
                   signIn(email, password);
                 }}
-                style={{ backgroundColor: 'rgb(0, 100, 255)' }}
+                style={{ padding: 5, borderRadius: 30, backgroundColor: 'rgb(0, 100, 255)' }}
               >
                 LOGIN
               </Button>
               <Button
-                width={200}
+                width={300}
                 icon="account-plus"
                 mode="contained"
-                onPress={() => setPossuiConta(!possuiConta)}
-                style={{ backgroundColor: 'rgb(223, 70, 97)' }}
+                onPress={() => {
+                  setPossuiConta(!possuiConta),
+                  setImageSource(require("@/assets/images/criarConta.png"))
+                }}
+                style={{ padding: 5, borderRadius: 30, backgroundColor: 'rgb(223, 70, 97)' }}
               >
                 CRIAR CONTA
               </Button>
             </Grid>
           ) : (
-            <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center'}}>
+            <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', marginTop: 20 }}>
               <Button
-                width={200}
+                width={300}
                 icon="account-plus"
                 mode="contained"
                 onPress={async () => {
                   signUp(nome, email, password);
                 }}
-                style={{ backgroundColor: 'rgb(0, 100, 255)' }}
+                style={{ padding: 5, borderRadius: 30, backgroundColor: 'rgb(223, 70, 97)' }}
               >
                 CRIAR CONTA
               </Button>
             </Grid>
           )}
 
-          <TouchableOpacity onPress={() => setPossuiConta(!possuiConta)}>
-            <Text style={styles.switchText}>
-              {possuiConta
-                ? ""
-                : "Já possui uma conta? Login"}
-            </Text>
-          </TouchableOpacity>
-          
+          <Grid style={{ display: 'flex', position: 'absolute', bottom: 50, alignItems: 'center', gap: 20 }}>
+            {!possuiConta && ( // Verifica se não possui conta
+              <>
+                <Text style={styles.switchText}>
+                  Já possui uma conta?
+                </Text>
+                <Button
+                  width={170} // Ajuste o tamanho conforme necessário
+                  icon="login-variant"
+                  mode="contained" // Ajuste o modo conforme desejado
+                  onPress={() => {
+                    setPossuiConta(true),
+                    setImageSource(require("@/assets/images/logoACME.png"))
+                  }} // Adiciona a funcionalidade para mudar para a tela de login
+                  style={styles.loginButton} // Adicione um estilo específico para o botão
+                >
+                  LOGIN
+                </Button>
+              </>
+            )}
+          </Grid>
+
           <Snackbar
             visible={message !== null}
             onDismiss={() => setMessage(null)}
@@ -191,7 +214,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
   },
   button: {
     backgroundColor: "rgb(223, 70, 97)",
@@ -216,9 +239,14 @@ const styles = StyleSheet.create({
   },
   switchText: {
     marginTop: 10,
+    marginHorizontal: 20,
     color: "hsl(215, 15%, 75%)",
     fontSize: 15,
     fontWeight: "100",
     letterSpacing: 1,
+  },
+  loginButton: {
+    paddingHorizontal: 10, // Ajuste o tamanho conforme necessário
+    backgroundColor: "rgb(0, 100, 255)", // Cor do texto do botão
   },
 });

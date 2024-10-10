@@ -1,25 +1,30 @@
-import { Snackbar, Text, TextInput } from "@/components";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity
+} from "react-native";
+import { useState } from "react";
+import { Avatar, Button, Grid, Snackbar, TextInput } from "@/components";
+import { Text } from "react-native-paper";
 import { auth } from "@/services/firebaseConfig";
 import { router } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { useEffect, useState } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ForgotPasswordScreen() {
+    const [message, setMessage] = useState(null);
     const [email, setEmail] = useState("");
-
+    const [helpData, setHelpData] = useState({email: null});
 
     const resetSenha = async() => {
-    
         if (email === "") {
           alert("Digite o e-mail para iniciar o processo de recuperação de senha.");
           return;
         } else {
-  
             try {
               await sendPasswordResetEmail(auth, email);
-              alert("E-mail para recuperação da senha enviado, favor verifique sua caixa de entrada ou spam.");
+              alert("E-mail para recuperação da senha enviado. Por favor verifique a sua caixa de entrada ou spam.");
             } catch (erro: any) {
               console.log(erro);
               alert("Erro ao enviar e-mail para recuperação da senha: " + erro.message);
@@ -27,41 +32,151 @@ export default function ForgotPasswordScreen() {
         }
       };
 
-      useEffect(() => {
-        
-      }, []);
+      const verifyFields = (text: string, name: string) => {
+        setHelpData((v: any) => ({
+          ...v,
+          [name]: text.length === 0 ? "Campo obrigatório" : null,
+        }));
+      };
 
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>
-                Esqueci minha senha
-            </Text>
-            <TextInput
-                style={styles.textInput}
-                placeholder="E-mail"
+      <>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <Grid style={{
+            backgroundColor: "rgb(10, 0, 30)",
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%'
+          }}>
+            <Grid style={{
+              marginTop: 100,
+              ...styles.container,
+              ...styles.padding,
+            }}>
+              <Avatar size={350} bgColor='transparent' source={require("@/assets/images/redefinirSenha.png")}/>
+            </Grid>
+            <Grid style={{...styles.padding}}>
+                <Text style={{
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  color: 'white',
+                  textAlign: 'center',
+                  letterSpacing: 2,
+                }}>
+                  Redefinição de senha...
+                </Text>
+            </Grid>
+            <Grid>
+              <TextInput
                 value={email}
-                onChangeText={setEmail}
-            />
-            <TouchableOpacity
-                style={styles.button}
-                onPress={resetSenha}
+                keyboardType="email-address"
+                onChangeText={(text: string) => {
+                  setEmail(text);
+                  verifyFields(text, 'email');
+                }}
+                label="E-mail"
+                helpText={helpData.email}
+                error={helpData.email !== null}
+              />
+            </Grid>
+            <Grid style={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', gap: 20, marginTop: 20}}>
+              <Button
+                width={300}
+                icon="key-outline"
+                mode="contained"
+                // onPress={resetSenha}
+                onPress={async () => {
+                  resetSenha();
+                }}
+                style={{ padding: 5, borderRadius: 30, backgroundColor: '#d32f2f' }}
+              >
+                RESETAR SENHA
+              </Button>
+            </Grid>
+            <Grid style={{ display: 'flex', position: 'absolute', bottom: 50, alignItems: 'center', gap: 20 }}>
+                <>
+                  <Text style={styles.switchText}>
+                    Retornar para a tela de login?
+                  </Text>
+                  <Button
+                    width={170}
+                    icon="login-variant"
+                    mode="contained"
+                    onPress={() => router.replace("/login")} // onPress={() => {router.replace("/login")}}>
+                    style={styles.loginButton}
+                  >
+                    LOGIN
+                  </Button>
+                </>
+            </Grid>
+
+            <Snackbar
+              visible={message !== null}
+              onDismiss={() => setMessage(null)}
+              duration={4000}
             >
-                <Text style={styles.text}>Resetar a senha</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {router.replace("/login")}}>
-          <Text style={styles.switchText}>Você já tem uma conta? Faça seu login!</Text>
-        </TouchableOpacity>
-        </SafeAreaView>
+              {message}
+            </Snackbar>
+          </Grid>
+        </ScrollView>
+      </>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
       display: "flex",
-      flex: 1,
       justifyContent: "center",
       alignItems: "center",
+      backgroundColor: "rgb(10, 0, 30)",
     },
+    padding: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 5,
+    },
+    button: {
+      padding: 10,
+      paddingRight: 40,
+      paddingLeft: 40,
+      borderRadius: 30,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "rgba(152, 49, 70, 0.3)",
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 1,
+      shadowRadius: 5,
+      elevation: 4,
+    },
+    text: {
+      color: "#FFFFFF",
+      fontSize: 15,
+      fontWeight: "bold",
+      letterSpacing: 1,
+      textTransform: "uppercase",
+    },
+    switchText: {
+      marginTop: 10,
+      marginHorizontal: 20,
+      color: "hsl(215, 15%, 75%)",
+      fontSize: 15,
+      fontWeight: "100",
+      letterSpacing: 1,
+    },
+    loginButton: {
+      paddingHorizontal: 10, // Ajuste o tamanho conforme necessário
+      backgroundColor: "rgb(0, 100, 255)", // Cor do texto do botão
+    },
+
+
+
+
+
+
+
+
     title: {
       fontSize: 28,
       fontWeight: "800",
@@ -84,30 +199,5 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.3,
       shadowRadius: 4,
       elevation: 4,
-    },
-    button: {
-      width: "90%",
-      marginVertical: 15,
-      backgroundColor: "#d32f2f",
-      padding: 20,
-      borderRadius: 15,
-      alignItems: "center",
-      justifyContent: "center",
-      shadowColor: "#d32f2f",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.4,
-      shadowRadius: 5,
-      elevation: 5,
-    },
-    text: {
-      color: "#FFFFFF",
-      fontSize: 18,
-      fontWeight: "600",
-    },
-    switchText: {
-      marginTop: 20,
-      color:  "rgb(32, 26, 25)",
-      fontSize: 16,
-      fontWeight: "500",
     },
   });

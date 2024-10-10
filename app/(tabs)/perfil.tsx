@@ -207,7 +207,11 @@ export default function PerfilScreen() {
           </Grid>
           
           <Grid>
-            <TextInput label="Nome" value={nome} onChangeText={setNome} />
+            <TextInput 
+              label="Nome"
+              value={nome}
+              onChangeText={setNome} 
+            />
           </Grid>
 
           <Grid style={{ marginBottom: 30 }}>
