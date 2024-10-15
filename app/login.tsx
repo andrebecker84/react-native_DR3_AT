@@ -61,8 +61,8 @@ export default function LoginScreen() {
   return (
     <>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Grid style={styles.container}>
-          <Grid style={{ marginTop: 100, ...styles.padding }}>
+        <Grid style={{ height: '100%', ...styles.container }}>
+          <Grid style={{ marginTop: 60, ...styles.container, ...styles.padding }}>
             <Avatar size={350} bgColor='transparent' source={imageSource}/>
           </Grid>
           <Grid style={styles.padding}>
@@ -120,45 +120,45 @@ export default function LoginScreen() {
               </TouchableOpacity>
             </Grid>
           )}
-          <Grid style={styles.buttonContainer}>
             {possuiConta ? (
-              <>
-                <Button
-                  width={300}
-                  icon="login-variant"
-                  mode="contained"
-                  onPress={handleAuth}
-                  style={styles.loginButton}
-                  loading={loading}
-                >
-                  LOGIN
-                </Button>
+                <Grid style={styles.buttonContainer}>
+                  <Button
+                    width={300}
+                    icon="login-variant"
+                    mode="contained"
+                    onPress={handleAuth}
+                    style={styles.loginButton}
+                    loading={loading}
+                  >
+                    LOGIN
+                  </Button>
+                  <Button
+                    width={300}
+                    icon="account-plus"
+                    mode="contained"
+                    onPress={() => {
+                      setPossuiConta(!possuiConta);
+                      setImageSource(require("@/assets/images/criarConta.png"));
+                    }}
+                    style={styles.signupButton}
+                  >
+                    CRIAR CONTA
+                  </Button>
+                </Grid>
+            ) : (
+              <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', marginTop: 20 }}>
                 <Button
                   width={300}
                   icon="account-plus"
                   mode="contained"
-                  onPress={() => {
-                    setPossuiConta(!possuiConta);
-                    setImageSource(require("@/assets/images/criarConta.png"));
-                  }}
+                  onPress={handleAuth}
                   style={styles.signupButton}
+                  loading={loading}
                 >
                   CRIAR CONTA
                 </Button>
-              </>
-            ) : (
-              <Button
-                width={300}
-                icon="account-plus"
-                mode="contained"
-                onPress={handleAuth}
-                style={styles.signupButton}
-                loading={loading}
-              >
-                CRIAR CONTA
-              </Button>
+              </Grid>
             )}
-          </Grid>
           {!possuiConta && (
             <Grid style={styles.alternateOptionContainer}>
               <Text style={styles.switchText}>Já possui uma conta?</Text>
@@ -195,10 +195,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgb(10, 0, 30)",
-    height: '100%'
   },
   padding: {
-    padding: 5,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonContainer: {
     display: 'flex',
@@ -210,13 +211,12 @@ const styles = StyleSheet.create({
   },
   alternateOptionContainer: {
     display: 'flex',
-    position: 'absolute',
-    bottom: 50,
     alignItems: 'center',
-    gap: 20,
+    gap: 15,
   },
   loginButton: {
-    paddingHorizontal: 10,
+    padding: 5,
+    borderRadius: 30,
     backgroundColor: "rgb(0, 100, 255)",
   },
   signupButton: {

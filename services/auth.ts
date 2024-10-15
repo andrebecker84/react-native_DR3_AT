@@ -60,10 +60,12 @@ const createLogin = async (
       displayName: nome,
     });
     const newUser = {
+      uid: user.uid,
       nome: user.displayName,
       email: user.email,
-      ativo: true,
-      telefone: "",
+      blocked: false,
+      dataCriacao: new Date(),
+      role: "colaborador",
     };
     await addUsuario(newUser);
 

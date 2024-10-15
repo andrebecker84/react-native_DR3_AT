@@ -50,7 +50,7 @@ export default function ForgotPasswordScreen() {
             height: '100%'
           }}>
             <Grid style={{
-              marginTop: 100,
+              marginTop: 60,
               ...styles.container,
               ...styles.padding,
             }}>
@@ -63,7 +63,7 @@ export default function ForgotPasswordScreen() {
                   color: 'white',
                   textAlign: 'center',
                   letterSpacing: 2,
-                  margin: 30
+                  margin: 10
                 }}>
                   Redefinir senha:
                 </Text>
@@ -79,10 +79,10 @@ export default function ForgotPasswordScreen() {
                 label="E-mail"
                 helpText={helpData.email}
                 error={helpData.email !== null}
-                width = "70%"
+                width = "80%"
               />
             </Grid>
-            <Grid style={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', gap: 20, marginTop: 20}}>
+            <Grid style={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', margin: 20 }}>
               <Button
                 width={200}
                 icon="key-outline"
@@ -96,10 +96,10 @@ export default function ForgotPasswordScreen() {
                 RESETAR SENHA
               </Button>
             </Grid>
-            <Grid style={{ display: 'flex', position: 'absolute', bottom: 50, alignItems: 'center', gap: 20 }}>
+            <Grid style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <>
                   <Text style={styles.switchText}>
-                    Retornar para a tela de login?
+                    Retornar para o login?
                   </Text>
                   <Button
                     width={170}
