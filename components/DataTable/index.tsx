@@ -1,99 +1,113 @@
-import React from "react";
-import { DataTable as DT, IconButton } from "react-native-paper";
-import { View, StyleSheet, TextStyle } from "react-native";
-import Text from "@/components/Text";
+import React, { useEffect, useState } from "react";
+import { Button, Snackbar, Card } from "react-native-paper"; 
+import { DataTable } from "react-native-paper";
+import { getCadastroCompra, deleteCadastroCompra } from "@/infra/getRequisicoes";
+import { StyleSheet } from "react-native";
 
-interface ReusableDataTableProps {
-  data: Array<any>;
-  onInfoPress: (id: string) => void;
-}
+const RequisicoesScreen = () => {
+  const [requisicoes, setRequisicoes] = useState<CadastroCompra[]>([]);
+  const [mensagem, setMensagem] = useState<string | null>(null);
+  
+  const fetchRequisicoes = async () => {
+    const dados = await getCadastroCompra();
+    setRequisicoes(dados);
+  };
 
-const getStatusStyle = (status: string): TextStyle => ({
-  color: status === "Aberta" ? "#B22222" : status === "Em cotação..." ? "#DAA520" : "#32CD32",
-});
+  const handleDelete = async (id: string) => {
+    await deleteCadastroCompra(id);
+    setMensagem("Requisição excluída com sucesso!");
+    fetchRequisicoes(); // Atualiza a lista após a exclusão
+  };
 
-// Função para agrupar os dados por status
-const groupByStatus = (data: Array<any>) => {
-  return data.reduce((groups, item) => {
-    const status = item.status;
-    if (!groups[status]) {
-      groups[status] = [];
-    }
-    groups[status].push(item);
-    return groups;
-  }, {} as Record<string, Array<any>>);
-};
+  useEffect(() => {
+    fetchRequisicoes();
+  }, []);
 
-const DataTable: React.FC<ReusableDataTableProps> = ({ data, onInfoPress }) => {
-  const groupedData = groupByStatus(data);
-  const statusCotacao = ["Aberta", "Em cotação...", "Cotado"];
+  const hideSnackbar = () => setMensagem(null);
 
   return (
-    <View>
-      {statusCotacao.map((status, statusIndex) => (
-        groupedData[status] && ( // Verifica se há dados para o status
-          <View key={statusIndex}>
-            {/* Título do grupo baseado no status */}
-            <Text style={[styles.statusTitle, getStatusStyle(status)]}>{status.toUpperCase()}</Text>
+    <Card style={styles.card}>
+      <Card.Title title="Requisições" subtitle="Lista de requisições cadastradas" />
+      <Card.Content>
+        <DataTable>
+          <DataTable.Header>
+            <DataTable.Title>Produto</DataTable.Title>
+            <DataTable.Title>Quantidade</DataTable.Title>
+            <DataTable.Title>Valor Unitário</DataTable.Title>
+            <DataTable.Title>Status</DataTable.Title>
+            <DataTable.Title>Ações</DataTable.Title>
+          </DataTable.Header>
 
-            <DT>
-              <DT.Header>
-                <DT.Title style={styles.header}>Data</DT.Title>
-                <DT.Title style={styles.header}>Quantidade</DT.Title>
-                <DT.Title style={styles.header}>Produto</DT.Title>
-                <DT.Title style={styles.header}>Status</DT.Title>
-                <DT.Title style={styles.header}>Notas</DT.Title>
-              </DT.Header>
+          {requisicoes.map((requisicao) => (
+            <DataTable.Row key={requisicao.id} style={styles.row}>
+              <DataTable.Cell style={styles.cell}>{requisicao.produto}</DataTable.Cell>
+              <DataTable.Cell style={styles.cell}>{requisicao.quantidade}</DataTable.Cell>
+              <DataTable.Cell style={styles.cell}>{requisicao.valorUnitario}</DataTable.Cell>
+              <DataTable.Cell style={styles.cell}>{requisicao.statusCotacao}</DataTable.Cell>
+              <DataTable.Cell style={styles.cell}>
+                <Button 
+                  icon="pencil" 
+                  mode="contained" 
+                  onPress={() => console.log("Editar", requisicao.id)} // Adicione lógica de edição aqui
+                  style={[styles.button, styles.editButton]}
+                >
+                  Editar
+                </Button>
+                <Button 
+                  icon="trash-can" 
+                  mode="contained" 
+                  onPress={() => handleDelete(requisicao.id)}
+                  style={[styles.button, styles.deleteButton]} 
+                >
+                  Excluir
+                </Button>
+              </DataTable.Cell>
+            </DataTable.Row>
+          ))}
+        </DataTable>
+      </Card.Content>
 
-              {groupedData[status].map((item, index) => (
-                <DT.Row key={index}>
-                  <DT.Cell style={styles.cell}>
-                    <Text style={styles.cellText}>{item.data}</Text>
-                  </DT.Cell>
-                  <DT.Cell style={styles.cell}>
-                    <Text style={styles.cellText}>{item.quantidade}</Text>
-                  </DT.Cell>
-                  <DT.Cell style={styles.cell}>
-                    <Text style={styles.cellText}>{item.produto}</Text>
-                  </DT.Cell>
-                  <DT.Cell style={styles.cell}>
-                    <Text style={[styles.cellText, getStatusStyle(item.status)]}>
-                      {item.status}
-                    </Text>
-                  </DT.Cell>
-                  <DT.Cell style={styles.cell}>
-                    <IconButton onPress={() => onInfoPress(item.id)} icon="information" />
-                  </DT.Cell>
-                </DT.Row>
-              ))}
-            </DT>
-          </View>
-        )
-      ))}
-    </View>
+      <Snackbar
+        visible={!!mensagem}
+        onDismiss={hideSnackbar}
+        duration={3000}
+      >
+        {mensagem}
+      </Snackbar>
+    </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    justifyContent: "center",
-    textAlign: "center",
-    fontWeight: "bold",
+  card: {
+    margin: 16,
+    borderRadius: 12,
+    elevation: 6,
+    backgroundColor: "#fff", // cor de fundo do cartão
+  },
+  row: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
   cell: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: 60,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
   },
-  cellText: {
-    textAlign: "center",
+  button: {
+    marginLeft: 8,
+    marginVertical: 4,
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
   },
-  statusTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
-    textAlign: "center",
+  editButton: {
+    backgroundColor: "#6200ea", // cor do botão de edição
+    elevation: 2,
+  },
+  deleteButton: {
+    backgroundColor: '#d32f2f', // cor do botão de exclusão
+    elevation: 2,
   },
 });
 
-export default DataTable;
+export default RequisicoesScreen;

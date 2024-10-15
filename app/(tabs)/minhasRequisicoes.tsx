@@ -1,104 +1,227 @@
-import { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
-import { DataTable, Grid, Text, TopBar } from "@/components";
-import { useSession } from "@/app/ctx";
-import { getCotacao, getCadastroCompra } from "@/infra/getRequisicoes";
-import { useFocusEffect } from "@react-navigation/native";
-import { router } from "expo-router";
-import { ItemInterface } from "@/interfaces/Item";
+import React, { useEffect, useState } from "react";
+import { Button, Snackbar, Card, Modal, Portal, TextInput } from "react-native-paper"; 
+import { DataTable } from "react-native-paper";
+import { getCadastroCompra, deleteCadastroCompra, updateCadastroCompra } from "@/infra/getRequisicoes";
+import { StyleSheet, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from '@react-navigation/native'; // Importando useFocusEffect
+import dayjs from "dayjs";
 
-export default function MinhasRequisicoesScreen() {
-  const [obj, setObj] = useState<ItemInterface[]>([]);
-  const { setId, userEmail } = useSession();
+const RequisicoesScreen = () => {
+  const [requisicoes, setRequisicoes] = useState([]);
+  const [mensagem, setMensagem] = useState<string | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [dataEdicaoReq, setDataEdicaoReq] = useState(new Date());
+  const [requisicaoEditando, setRequisicaoEditando] = useState({
+    id: '',
+    produto: '',
+    quantidade: 0,
+    valorUnitario: 0,
+    valorTotal: 0,
+    statusCotacao: '',
+    dataEdicaoReq: null,
+  });
 
-  const fetchData = async () => {
-    if (!userEmail || !userEmail.email) {
-      console.error("userEmail não está definido");
-      return;
-    }
-
-    const data = await getCotacao();
-
-    const filteredData = data.filter(
-      (item: ItemInterface) => item.solicitante.email === userEmail.email
-    );
-
-    const data2 = await getCadastroCompra();
-    const filteredData2 = data2.filter(
-      (item: ItemInterface) => item.solicitante.email === userEmail.email
-    );
-    const filteredData3 = filteredData2.filter(
-      (item: ItemInterface) => item.status === "Aberta"
-    );
-    setObj([...filteredData, ...filteredData3]);
+  const fetchRequisicoes = async () => {
+    const dados = await getCadastroCompra();
+    setRequisicoes(dados);
   };
 
+  const handleDelete = async (id) => {
+    await deleteCadastroCompra(id);
+    setMensagem("Requisição excluída com sucesso!");
+    fetchRequisicoes();
+  };
+
+  const handleEdit = (requisicao) => {
+    setRequisicaoEditando(requisicao);
+    setModalVisible(true);
+  };
+
+  const handleUpdate = async () => {
+    if (requisicaoEditando.id) {
+      try {
+        // Atualiza a data de edição para o momento atual
+        const novaRequisicao = {
+          ...requisicaoEditando,
+          dataEdicaoReq: dayjs().toDate(), // Atualiza com a data atual
+        };
+  
+        // Use novaRequisicao para atualizar a requisição no banco de dados
+        await updateCadastroCompra(novaRequisicao);
+        setMensagem("Requisição atualizada com sucesso!");
+        setModalVisible(false);
+        setRequisicaoEditando({
+          id: '',
+          produto: '',
+          quantidade: 0,
+          valorUnitario: 0,
+          valorTotal: 0,
+          statusCotacao: 'Aberta',
+          dataEdicaoReq: null, // Reseta a data de edição
+        });
+        fetchRequisicoes();
+      } catch (error) {
+        console.error("Erro ao atualizar a requisição:", error);
+        setMensagem("Erro ao atualizar a requisição.");
+      }
+    } else {
+      setMensagem("ID da requisição não encontrado.");
+    }
+  };  
+
+  // useFocusEffect substituindo o primeiro useEffect
   useFocusEffect(
-    useCallback(() => {
-      fetchData();
-    }, [userEmail])
+    React.useCallback(() => {
+      fetchRequisicoes();
+    }, [])
   );
 
-  const handleInfoPress = (id: string) => {
-    setId(id);
-    router.push("/form");
-  };
+  useEffect(() => {
+    const valorTotal = requisicaoEditando.quantidade * requisicaoEditando.valorUnitario;
+    setRequisicaoEditando((prev) => ({ ...prev, valorTotal }));
+  }, [requisicaoEditando.quantidade, requisicaoEditando.valorUnitario]);
+
+  const hideSnackbar = () => setMensagem(null);
 
   return (
     <>
-      <ScrollView>
-        <Grid>
-          <TopBar title="Minhas Requisições" />
-          <View style={styles.card}>
-            <View style={styles.container}>
-              <Text style={styles.title}>
-                Requisições de {userEmail.nome}
-              </Text>
-              <DataTable data={obj} onInfoPress={handleInfoPress} />
-            </View>
-          </View>
-        </Grid>
-      </ScrollView>
-      <Grid
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          marginTop: 16,
-          gap: 16,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 12,
-            color: "#555",
-            marginBottom: 4,
-          }}
+      <Card style={styles.card}>
+        <Card.Title title="Requisições" subtitle="Lista de requisições cadastradas" />
+        <Card.Content>
+          <DataTable>
+            <DataTable.Header style={styles.header}>
+              <DataTable.Title textStyle={styles.cellTitle}>Produto</DataTable.Title>
+              <DataTable.Title textStyle={styles.cellTitle}>Qtde.</DataTable.Title>
+              <DataTable.Title textStyle={styles.cellTitle}>Valor Un.</DataTable.Title>
+              <DataTable.Title textStyle={styles.cellTitle}>Total</DataTable.Title>
+              <DataTable.Title textStyle={styles.cellTitle}>Status</DataTable.Title>
+              <DataTable.Title textStyle={styles.cellTitle}>Ações</DataTable.Title>
+            </DataTable.Header>
+
+            {requisicoes.map((requisicao) => (
+              <DataTable.Row key={requisicao.id} style={styles.row}>
+                <DataTable.Cell textStyle={styles.cell}>{requisicao.produto}</DataTable.Cell>
+                <DataTable.Cell textStyle={styles.cell}>{requisicao.quantidade}</DataTable.Cell>
+                <DataTable.Cell textStyle={styles.cell}>{requisicao.valorUnitario}</DataTable.Cell>
+                <DataTable.Cell textStyle={styles.cell}>{requisicao.quantidade * requisicao.valorUnitario}</DataTable.Cell>
+                <DataTable.Cell textStyle={styles.cell}>{requisicao.statusCotacao}</DataTable.Cell>
+                <DataTable.Cell style={styles.cell}>
+                  <View style={styles.iconWrapper}>
+                    <Ionicons name="pencil" size={24} color="#56d363" onPress={() => handleEdit(requisicao)} />
+                    <Ionicons name="trash" size={24} color="#ff6666" onPress={() => handleDelete(requisicao.id)} />
+                  </View>
+                </DataTable.Cell>
+              </DataTable.Row>
+            ))}
+          </DataTable>
+        </Card.Content>
+
+        <Snackbar
+          visible={!!mensagem}
+          onDismiss={hideSnackbar}
+          duration={3000}
+          style={styles.snackbar}
         >
-          ***Conforme Regras de Negócio do sistema, somente é possível alterar
-          requisições em aberto.
-        </Text>
-      </Grid>
+          {mensagem}
+        </Snackbar>
+
+        <Portal>
+          <Modal visible={modalVisible} onDismiss={() => setModalVisible(false)} contentContainerStyle={styles.modal}>
+            <TextInput
+              label="Produto"
+              value={requisicaoEditando.produto} 
+              onChangeText={(text) => setRequisicaoEditando({ ...requisicaoEditando, produto: text })}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { primary: '#56d363' } }}
+            />
+            <TextInput
+              label="Quantidade"
+              value={String(requisicaoEditando.quantidade)} 
+              onChangeText={(text) => setRequisicaoEditando({ ...requisicaoEditando, quantidade: Number(text) })}
+              style={styles.input}
+              keyboardType="numeric"
+              mode="outlined"
+              theme={{ colors: { primary: '#56d363' } }}
+            />
+            <TextInput
+              label="Valor Unitário"
+              value={String(requisicaoEditando.valorUnitario)} 
+              onChangeText={(text) => setRequisicaoEditando({ ...requisicaoEditando, valorUnitario: Number(text) })}
+              style={styles.input}
+              keyboardType="numeric"
+              mode="outlined"
+              theme={{ colors: { primary: '#56d363' } }}
+            />
+            <TextInput
+              label="Valor Total"
+              value={String(requisicaoEditando.valorTotal)} 
+              editable={false}
+              style={styles.input}
+              mode="outlined"
+              theme={{ colors: { primary: '#56d363' } }}
+            />
+            <Button mode="contained" onPress={handleUpdate} style={styles.updateButton}>
+              Atualizar
+            </Button>
+          </Modal>
+        </Portal>
+      </Card>
     </>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 16,
-  },
-  title: {
-    marginBottom: 16,
-    fontSize: 20,
-    fontWeight: "bold",
-  },
   card: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    marginVertical: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    marginTop: 100,
+    margin: 16,
+    borderRadius: 16,
+    backgroundColor: "#222",
+    elevation: 6,
+  },
+  header: {
+    backgroundColor: "#333",
+  },
+  row: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#555",
+  },
+  cellTitle: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: "#aaa",
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
+  cell: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: "#eee",
+    fontSize: 13,
+  },
+  iconWrapper: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 60,
+  },
+  modal: {
+    backgroundColor: "#444",
+    padding: 24,
+    borderRadius: 16,
+  },
+  input: {
+    backgroundColor: "#666",
+    marginBottom: 12,
+  },
+  updateButton: {
+    backgroundColor: "#56d363",
+  },
+  snackbar: {
+    backgroundColor: "#444",
   },
 });
+
+export default RequisicoesScreen;

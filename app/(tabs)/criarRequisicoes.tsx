@@ -10,9 +10,6 @@ import dayjs from "dayjs";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import uuid from 'react-native-uuid';
 
-// Para gerar um novo UUID
-const newUUID = uuid.v4();
-
 export default function CriarRequisicoesScreen() {
   const { userEmail } = useSession();
   
@@ -58,7 +55,7 @@ export default function CriarRequisicoesScreen() {
     const produtoSelecionado = options.find((opt) => opt.value === selectedProduto);
     if (produtoSelecionado) {
         setValorUnitario(produtoSelecionado.valorUnitario || 0);
-        setValorTotal((produtoSelecionado.valorUnitario || 0) * quantidade); // Atualiza o valor total
+        setValorTotal((produtoSelecionado.valorUnitario || 0) * quantidade);
     }
   };
 
@@ -76,13 +73,16 @@ export default function CriarRequisicoesScreen() {
         return;
     }
 
+    // Para gerar um novo UUID
+    const novoUUID = uuid.v4();
+
     const cadastroCompra = {
-        RID: uuid.v4(), // Gera um novo UUID
-        id: newUUID,
+        RID: novoUUID,
+        id: novoUUID,
         produto,
         quantidade,
-        valorUnitario: parseFloat(valorUnitario.toFixed(2)), // garante que é um número
-        valorTotal: parseFloat(valorTotal.toFixed(2)), // garante que é um número
+        valorUnitario: parseFloat(valorUnitario.toFixed(2)),
+        valorTotal: parseFloat(valorTotal.toFixed(2)),
         solicitante: userEmail.displayName,
         notas,
         prioridade,
@@ -91,14 +91,14 @@ export default function CriarRequisicoesScreen() {
         dataEdicaoReq: null,
     };
 
-    console.log("Dados a serem cadastrados:", cadastroCompra); // log dos dados
+    console.log("Dados a serem cadastrados:", cadastroCompra);
 
     try {
         await addCadastroCompra(cadastroCompra);
         clearFields();
         setMensagem("Requisição cadastrada com sucesso!");
     } catch (error) {
-        console.error("Erro ao cadastrar a requisição: ", error); // log do erro
+        console.error("Erro ao cadastrar a requisição: ", error);
         setMensagem("Erro ao cadastrar a requisição. Tente novamente.");
     }
 };
