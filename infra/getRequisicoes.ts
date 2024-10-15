@@ -1,10 +1,10 @@
 import {
   addDoc,
-    collection,
-    deleteDoc,
-    doc,
-    getDocs,
-    updateDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/services/firebaseConfig";
 
@@ -70,11 +70,21 @@ import { db } from "@/services/firebaseConfig";
     }
   }
 
-  export async function addCadastroCompra(novaRequisicao: any) {
+  // export async function addCadastroCompra(novaRequisicao: any) {
+  //   try {
+  //     const docRef = await addDoc(collection(db, "CadastroCompra"), novaRequisicao);
+  //     console.log("Requisição de Compra efetuada com ID: ", docRef.id);
+  //   } catch (erro) {
+  //     console.error("Erro ao criar a requisição de compra: ", erro);
+  //   }
+  // }
+
+  export const addCadastroCompra = async (novaRequisicao) => {
     try {
-      const docRef = await addDoc(collection(db, "CadastroCompra"), novaRequisicao);
+      const docRef = await addDoc(collection(db, "requisicoes"), novaRequisicao);
       console.log("Requisição de Compra efetuada com ID: ", docRef.id);
+      return docRef;
     } catch (erro) {
-      console.error("Erro ao criar a requisição de compra: ", erro);
+      console.error("Erro ao adicionar requisição: ", erro);
     }
-  }
+  };

@@ -8,34 +8,35 @@ import { useSession } from "@/app/ctx";
 import conexao from "@/services/verificarConexao";
 import dayjs from "dayjs";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import uuid from 'react-native-uuid';
+
+// Para gerar um novo UUID
+const newUUID = uuid.v4();
 
 export default function CriarRequisicoesScreen() {
   const { userEmail } = useSession();
   
-  const [produto, setProduto] = useState<string>();
+  const [produto, setProduto] = useState<string>("");
   const [options, setOptions] = useState<any[]>([]);
-  const [requisicaoRef, setRequisicaoRef] = useState<any>();
   const [dados, setDados] = useState<any>();
-  const [uid, setUid] = useState<string>();
-  const [valorTotal, setValorTotal] = useState<number>();
-  const [valorUnitario, setValorUnitario] = useState<number>();
-  const [prioridade, setPrioridade] = useState<string>();
-  const [quantidade, setQuantidade] = useState<number>();
-  const [notas, setNotas] = useState<string>();
+  const [valorTotal, setValorTotal] = useState<number>(0);
+  const [valorUnitario, setValorUnitario] = useState<number>(0);
+  const [quantidade, setQuantidade] = useState<number>(0);
+  const [prioridade, setPrioridade] = useState<string>("");
+  const [notas, setNotas] = useState<string>("");
   const [mensagem, setMensagem] = useState<string | null>(null);
-
-  // Estados para os Date Pickers
   const [dataRequisicao, setDataRequisicao] = useState(new Date());
   const [showDataRequisicaoPicker, setShowDataRequisicaoPicker] = useState(false);
-  const [showDataEdicaoReqPicker, setShowDataEdicaoReqPicker] = useState(false);
 
   const loadProdutos = async () => {
     const produtos = await getProdutos();
     const updatedOptions = produtos.map((produto: any) => ({
-      label: produto.nome,
-      value: produto.nome,
+        label: produto.nome,
+        value: produto.nome,
+        valorTotal: produto.valorTotal,
+        valorUnitario: produto.valorUnitario
     }));
-    setOptions(updatedOptions); // Atualizando o estado das opções
+    setOptions(updatedOptions);
   };
 
   const selecaoPrioridade = [
@@ -45,96 +46,134 @@ export default function CriarRequisicoesScreen() {
   ];
 
   const clearFields = () => {
-    setProduto('');
-    setPrioridade('');
-    setQuantidade(undefined);
-    setNotas('');
+    setProduto("");
+    setPrioridade("");
+    setQuantidade(0);
+    setNotas("");
+    setValorUnitario(0);
+    setValorTotal(0);
+  };
+
+  const handleSelectProduto = (selectedProduto) => {
+    const produtoSelecionado = options.find((opt) => opt.value === selectedProduto);
+    if (produtoSelecionado) {
+        setValorUnitario(produtoSelecionado.valorUnitario || 0);
+        setValorTotal((produtoSelecionado.valorUnitario || 0) * quantidade); // Atualiza o valor total
+    }
+  };
+
+  const calcularValorTotal = () => {
+    setValorTotal(valorUnitario * quantidade);
   };
 
   const handleSubmit = async () => {
-    if (!produto || !prioridade || !quantidade) {
-      setMensagem("Todos os campos são obrigatórios!");
-      return false;
+    if (!produto || !prioridade || quantidade <= 0) {
+        setMensagem("Todos os campos são obrigatórios!");
+        return;
     }
-    if (!conexao()){
-      setMensagem("Sem conexão com a internet...");
-      return false;
-    }else{
-      const solicitante = {
-        id: userEmail.uid,
-        username: userEmail.username,
-        nome: userEmail.nome,
-        email: userEmail.email,
-        photoURL: userEmail.photoURL ? userEmail.photoURL : null,
-      };
-  
-      const valorTotalFormatado = parseFloat(dados.valorTotal).toFixed(2);
-      const cadastroCompra = {
-        RID: requisicaoRef.id,
-        produto: produto,
-        quantidade: quantidade,
-        valorUnitario: parseFloat(dados.valorUnitario),
-        valorTotal: parseFloat(valorTotalFormatado),
-        solicitante: userEmail.nome,
-        notas: notas,
-        prioridade: prioridade,
+    if (!conexao()) {
+        setMensagem("Sem conexão com a internet...");
+        return;
+    }
+
+    const cadastroCompra = {
+        RID: uuid.v4(), // Gera um novo UUID
+        id: newUUID,
+        produto,
+        quantidade,
+        valorUnitario: parseFloat(valorUnitario.toFixed(2)), // garante que é um número
+        valorTotal: parseFloat(valorTotal.toFixed(2)), // garante que é um número
+        solicitante: userEmail.displayName,
+        notas,
+        prioridade,
         statusCotacao: 'Aberta',
         dataRequisicao: dayjs(dataRequisicao).toDate(),
         dataEdicaoReq: null,
-      };
-      await addCadastroCompra(cadastroCompra);
-      clearFields();
+    };
+
+    console.log("Dados a serem cadastrados:", cadastroCompra); // log dos dados
+
+    try {
+        await addCadastroCompra(cadastroCompra);
+        clearFields();
+        setMensagem("Requisição cadastrada com sucesso!");
+    } catch (error) {
+        console.error("Erro ao cadastrar a requisição: ", error); // log do erro
+        setMensagem("Erro ao cadastrar a requisição. Tente novamente.");
     }
-  };
+};
 
   useEffect(() => {
     loadProdutos();
   }, []);
 
+  useEffect(() => {
+    calcularValorTotal();
+  }, [quantidade, valorUnitario]);
+
   return (
     <ScrollView>
       <TopBar title="Nova Requisição" />
       <Grid style={styles.content}>
-      <Grid style={styles.card}>
-        <Text style={styles.title}>Cadastrar Requisição de Compra</Text>
-        <Dropdown
-          label="Prioridade"
-          placeholder="Selecione a prioridade"
-          options={selecaoPrioridade}
-          value={prioridade}
-          onSelect={setPrioridade}
-        />
-        {options.length > 0 ? (
+        <Grid style={styles.card}>
+          <Text style={styles.title}>Cadastrar Requisição de Compra</Text>
           <Dropdown
-            label="Produto"
-            placeholder="Selecione um produto"
-            options={options}
-            value={produto}
-            onSelect={setProduto}
+            label="Prioridade"
+            placeholder="Selecione a prioridade"
+            options={selecaoPrioridade}
+            value={prioridade}
+            onSelect={setPrioridade}
           />
-        ) : (
-          <TextInput 
-          label="Produtos"
-          value={produto}
-          onChangeText={(text: string) => setProduto(text)}
+          {options.length > 0 ? (
+            <Dropdown
+              label="Produto"
+              placeholder="Selecione um produto"
+              options={options}
+              value={produto}
+              onSelect={(selecionado) => {
+                setProduto(selecionado);
+                handleSelectProduto(selecionado);
+              }}
+            />
+          ) : (
+            <TextInput 
+              label="Produtos"
+              value={produto}
+              onChangeText={(text: string) => setProduto(text)}
+            />
+          )}
+          <TextInput
+              label="Quantidade"
+              value={quantidade.toString()}
+              onChangeText={(text: string) => {
+                  const num = parseInt(text);
+                  setQuantidade(isNaN(num) ? 0 : num);
+              }}
+              keyboardType="numeric"
           />
-        )}
-        <TextInput
-          label="Quantidade"
-          value={quantidade}
-          onChangeText={(number: number) => setQuantidade(number)}
-        />
-        <TextInput
-          label="Notas"
-          value={notas}
-          onChangeText={(text: string) => setNotas(text)}
-          multiline={true}
-          numberOfLines={4}
-        />
-
-         {/* Date Picker para Data de Requisição */}
-        <View style={{ marginBottom: 20 }}>
-          <Text style={styles.texto}>Escolha a Data de Requisição:</Text>
+          <TextInput
+              label="Valor Unitário"
+              value={valorUnitario.toString()}
+              onChangeText={(text: string) => {
+                  const num = parseFloat(text);
+                  setValorUnitario(isNaN(num) ? 0 : num);
+              }}
+              keyboardType="numeric"
+          />
+          <TextInput
+              label="Valor Total"
+              value={valorTotal.toFixed(2)} // Somente leitura
+              editable={false} // Não deve ser editável
+          />
+          <TextInput
+            label="Notas"
+            value={notas}
+            onChangeText={(text: string) => setNotas(text)}
+            multiline={true}
+            numberOfLines={4}
+          />
+          <View style={{ marginBottom: 20 }}>
+            <Text style={styles.texto}>Escolha a Data de Requisição:</Text>
             <Button 
               style={{ marginTop: 6, backgroundColor: "rgb(0, 0, 45)" }} 
               icon="calendar" 
@@ -145,35 +184,33 @@ export default function CriarRequisicoesScreen() {
             >
               {dayjs(dataRequisicao).format("DD/MM/YYYY HH:mm")}
             </Button>
-          {showDataRequisicaoPicker && (
-            <DateTimePicker
-              value={dataRequisicao}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => {
-                setShowDataRequisicaoPicker(false);
-                if (selectedDate) setDataRequisicao(selectedDate);
-              }}
-            />
-          )}
-        </View>
-        <Button
-          icon="cart-plus" 
-          mode="contained" 
-          onPress={() => {
-            handleSubmit();
-          }}
-        >
-          Cadastrar Requisição
-        </Button>
-      </Grid>
-      <Snackbar
+            {showDataRequisicaoPicker && (
+              <DateTimePicker
+                value={dataRequisicao}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowDataRequisicaoPicker(false);
+                  if (selectedDate) setDataRequisicao(selectedDate);
+                }}
+              />
+            )}
+          </View>
+          <Button
+            icon="cart-plus" 
+            mode="contained" 
+            onPress={handleSubmit}
+          >
+            Cadastrar Requisição
+          </Button>
+        </Grid>
+        <Snackbar
           visible={mensagem !== null}
           onDismiss={() => setMensagem(null)}
           duration={5000}
           text={mensagem}
         />
-        </Grid>
+      </Grid>
     </ScrollView>
   );
 }
