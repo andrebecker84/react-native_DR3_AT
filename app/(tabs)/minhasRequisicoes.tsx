@@ -12,6 +12,11 @@ export default function MinhasRequisicoesScreen() {
   const { setId, userEmail } = useSession();
 
   const fetchData = async () => {
+    if (!userEmail || !userEmail.email) {
+      console.error("userEmail não está definido");
+      return;
+    }
+
     const data = await getCotacao();
 
     const filteredData = data.filter(
@@ -31,7 +36,7 @@ export default function MinhasRequisicoesScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchData();
-    }, [])
+    }, [userEmail])
   );
 
   const handleInfoPress = (id: string) => {

@@ -4,7 +4,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { useSession } from "@/app/ctx";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "expo-router";
 import { Avatar, Button, Grid, Snackbar, TextInput } from "@/components";
 import { Text } from "react-native-paper";
@@ -14,8 +14,8 @@ export default function LoginScreen() {
   const { signIn, signUp } = useSession();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [email, setEmail] = useState("colaborador@teste.com"); // Preenchido com valor fixo para login
-  const [password, setPassword] = useState("teste123"); // Preenchido com valor fixo para login
+  const [email, setEmail] = useState(""); // Preenchido com valor fixo para login
+  const [password, setPassword] = useState(""); // Preenchido com valor fixo para login
   const [nome, setNome] = useState(""); // Inicialmente vazio na tela de login
   const [possuiConta, setPossuiConta] = useState(true);
   const [helpData, setHelpData] = useState({
@@ -24,6 +24,18 @@ export default function LoginScreen() {
     password: null,
   });
   const [imageSource, setImageSource] = useState(require("@/assets/images/logoACME.png"));
+
+  useEffect(() => {
+    if (possuiConta) {
+      // Define os valores apenas para a tela de login
+      setEmail("colaborador@teste.com");
+      setPassword("teste123");
+    } else {
+      // Limpa os valores para a tela de criação de conta
+      setEmail("");
+      setPassword("");
+    }
+  }, [possuiConta]);
 
   const handleCreateAccount = () => {
     // Defina a nova imagem aqui, você pode ter várias imagens para alternar

@@ -10,23 +10,23 @@ import { db } from "@/services/firebaseConfig";
 
   export async function getCotacao() {
     try {
-      const querySnapshot = await getDocs(collection(db, "cotacao"));
+      const querySnapshot = await getDocs(collection(db, "cotacoes"));
       const cotacao: any = [];
       querySnapshot.forEach((doc) => {
         cotacao.push({ id: doc.id, ...doc.data() });
       });
       return cotacao;
     } catch (erro) {
-      console.error("Error getting documents: ", erro);
+      console.error("Erro ao buscar cotações: ", erro);
     }
   }
 
   export async function deleteCotacao(id: string) {
     try {
-      await deleteDoc(doc(db, "cotacao", id));
-      console.log("Document deleted with ID: ", id);
+      await deleteDoc(doc(db, "cotacoes", id));
+      console.log("Cotação deletada com o ID: ", id);
     } catch (erro) {
-      console.error("Error deleting document: ", erro);
+      console.error("Erro ao apagar cotação: ", erro);
     }
   }
 

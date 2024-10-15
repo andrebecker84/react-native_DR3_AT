@@ -9,7 +9,7 @@ interface ReusableDataTableProps {
 }
 
 const getStatusStyle = (status: string): TextStyle => ({
-  color: status === "aberta" ? "#B22222" : status === "em cotacao" ? "#DAA520" : "#32CD32",
+  color: status === "Aberta" ? "#B22222" : status === "Em cotação..." ? "#DAA520" : "#32CD32",
 });
 
 // Função para agrupar os dados por status

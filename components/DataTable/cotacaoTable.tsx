@@ -3,7 +3,7 @@ import { DataTable } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
 
 interface Cotacao {
-  fornecedor: string;
+  responsavel: string;
   preco: string;
   total: string;
 }
