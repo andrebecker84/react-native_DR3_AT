@@ -14,9 +14,9 @@ export default function LoginScreen() {
   const { signIn, signUp } = useSession();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
-  const [email, setEmail] = useState(""); // Preenchido com valor fixo para login
-  const [password, setPassword] = useState(""); // Preenchido com valor fixo para login
-  const [nome, setNome] = useState(""); // Inicialmente vazio na tela de login
+  const [email, setEmail] = useState(""); 
+  const [password, setPassword] = useState(""); 
+  const [nome, setNome] = useState(""); 
   const [possuiConta, setPossuiConta] = useState(true);
   const [helpData, setHelpData] = useState({
     nome: null,
@@ -27,75 +27,57 @@ export default function LoginScreen() {
 
   useEffect(() => {
     if (possuiConta) {
-      // Define os valores apenas para a tela de login
       setEmail("colaborador@teste.com");
       setPassword("teste123");
     } else {
-      // Limpa os valores para a tela de criação de conta
       setEmail("");
       setPassword("");
     }
   }, [possuiConta]);
 
-  const handleCreateAccount = () => {
-    // Defina a nova imagem aqui, você pode ter várias imagens para alternar
-    setImageSource(require("@/assets/images/criarConta.png"));
-  };
-
-  const verifyFields = (text: string, name: string) => {
-    setHelpData((v: any) => ({
-      ...v,
+  const verifyFields = (text, name) => {
+    setHelpData(prev => ({
+      ...prev,
       [name]: text.length === 0 ? "Campo obrigatório" : null,
     }));
+  };
+
+  const handleAuth = async () => {
+    setLoading(true);
+    try {
+      if (possuiConta) {
+        await signIn(email, password);
+      } else {
+        await signUp(email, password, nome); // Corrigido: ordem dos parâmetros
+      }
+      setMessage(possuiConta ? "Login realizado com sucesso!" : "Conta criada com sucesso!");
+    } catch (error) {
+      setMessage("Erro: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <Grid style={{
-          backgroundColor: "rgb(10, 0, 30)",
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%'
-        }}>
-          <Grid style={{
-            marginTop: 100,
-            ...styles.container,
-            ...styles.padding,
-          }}>
+        <Grid style={styles.container}>
+          <Grid style={{ marginTop: 100, ...styles.padding }}>
             <Avatar size={350} bgColor='transparent' source={imageSource}/>
           </Grid>
-          <Grid style={{...styles.padding}}>
+          <Grid style={styles.padding}>
             {possuiConta && (
-              <Text style={{
-                fontSize: 24,
-                fontWeight: 'bold',
-                color: 'white',
-                textAlign: 'center',
-                letterSpacing: 2,
-              }}>
-                Seja bem-vindo!
-              </Text>
+              <Text style={styles.textHeader}>Seja bem-vindo!</Text>
             )}
           </Grid>
-          <Text style={{
-            fontSize: 24,
-            fontWeight: 'bold',
-            color: 'white',
-            textAlign: 'center',
-            letterSpacing: 2,
-          }}>
-            {possuiConta ? 
-              "" :
-            "Criar Conta"
-            }
+          <Text style={styles.textHeader}>
+            {possuiConta ? "" : "Criar Conta"}
           </Text>
-          {possuiConta ? null : (
+          {!possuiConta && (
             <Grid>
               <TextInput
                 value={nome}
-                onChangeText={(text: string) => {
+                onChangeText={(text) => {
                   setNome(text);
                   verifyFields(text, 'nome');
                 }}
@@ -109,7 +91,7 @@ export default function LoginScreen() {
             <TextInput
               value={email}
               keyboardType="email-address"
-              onChangeText={(text: string) => {
+              onChangeText={(text) => {
                 setEmail(text);
                 verifyFields(text, 'email');
               }}
@@ -121,7 +103,7 @@ export default function LoginScreen() {
           <Grid>
             <TextInput
               value={password}
-              onChangeText={(text: string) => {
+              onChangeText={(text) => {
                 setPassword(text);
                 verifyFields(text, 'password');
               }}
@@ -131,77 +113,69 @@ export default function LoginScreen() {
               error={helpData.password !== null}
             />
           </Grid>
-          {possuiConta ? (
-            <Grid style={{...styles.padding}}>
+          {possuiConta && (
+            <Grid style={styles.padding}>
               <TouchableOpacity onPress={() => router.replace("/forgot-password")}>
                 <Text style={styles.switchText}>Esqueci minha senha</Text>
               </TouchableOpacity>
             </Grid>
-          ) : null}
-          {possuiConta ? (
-            <Grid style={{ display: 'flex', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', gap: 20, marginTop: 20}}>
-              <Button
-                width={300}
-                icon="login-variant"
-                mode="contained"
-                onPress={async () => {
-                  signIn(email, password);
-                }}
-                style={{ padding: 5, borderRadius: 30, backgroundColor: 'rgb(0, 100, 255)' }}
-              >
-                LOGIN
-              </Button>
-              <Button
-                width={300}
-                icon="account-plus"
-                mode="contained"
-                onPress={() => {
-                  setPossuiConta(!possuiConta),
-                  setImageSource(require("@/assets/images/criarConta.png"))
-                }}
-                style={{ padding: 5, borderRadius: 30, backgroundColor: 'rgb(223, 70, 97)' }}
-              >
-                CRIAR CONTA
-              </Button>
-            </Grid>
-          ) : (
-            <Grid style={{ display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-evenly', alignItems: 'center', marginTop: 20 }}>
-              <Button
-                width={300}
-                icon="account-plus"
-                mode="contained"
-                onPress={async () => {
-                  signUp(nome, email, password);
-                }}
-                style={{ padding: 5, borderRadius: 30, backgroundColor: 'rgb(223, 70, 97)' }}
-              >
-                CRIAR CONTA
-              </Button>
-            </Grid>
           )}
-
-          <Grid style={{ display: 'flex', position: 'absolute', bottom: 50, alignItems: 'center', gap: 20 }}>
-            {!possuiConta && ( // Verifica se não possui conta
+          <Grid style={styles.buttonContainer}>
+            {possuiConta ? (
               <>
-                <Text style={styles.switchText}>
-                  Já possui uma conta?
-                </Text>
                 <Button
-                  width={170} // Ajuste o tamanho conforme necessário
+                  width={300}
                   icon="login-variant"
-                  mode="contained" // Ajuste o modo conforme desejado
-                  onPress={() => {
-                    setPossuiConta(true),
-                    setImageSource(require("@/assets/images/logoACME.png"))
-                  }} // Adiciona a funcionalidade para mudar para a tela de login
-                  style={styles.loginButton} // Adicione um estilo específico para o botão
+                  mode="contained"
+                  onPress={handleAuth}
+                  style={styles.loginButton}
+                  loading={loading}
                 >
                   LOGIN
                 </Button>
+                <Button
+                  width={300}
+                  icon="account-plus"
+                  mode="contained"
+                  onPress={() => {
+                    setPossuiConta(!possuiConta);
+                    setImageSource(require("@/assets/images/criarConta.png"));
+                  }}
+                  style={styles.signupButton}
+                >
+                  CRIAR CONTA
+                </Button>
               </>
+            ) : (
+              <Button
+                width={300}
+                icon="account-plus"
+                mode="contained"
+                onPress={handleAuth}
+                style={styles.signupButton}
+                loading={loading}
+              >
+                CRIAR CONTA
+              </Button>
             )}
           </Grid>
-
+          {!possuiConta && (
+            <Grid style={styles.alternateOptionContainer}>
+              <Text style={styles.switchText}>Já possui uma conta?</Text>
+              <Button
+                width={170}
+                icon="login-variant"
+                mode="contained"
+                onPress={() => {
+                  setPossuiConta(true);
+                  setImageSource(require("@/assets/images/logoACME.png"));
+                }}
+                style={styles.loginButton}
+              >
+                LOGIN
+              </Button>
+            </Grid>
+          )}
           <Snackbar
             visible={message !== null}
             onDismiss={() => setMessage(null)}
@@ -221,44 +195,46 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgb(10, 0, 30)",
+    height: '100%'
   },
   padding: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     padding: 5,
   },
-  button: {
-    backgroundColor: "rgb(223, 70, 97)",
-    padding: 10,
-    paddingRight: 40,
-    paddingLeft: 40,
-    borderRadius: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "rgba(152, 49, 70, 0.3)",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 1,
-    shadowRadius: 5,
-    elevation: 4,
+  buttonContainer: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    gap: 20,
+    marginTop: 20,
   },
-  text: {
-    color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "bold",
-    letterSpacing: 1,
-    textTransform: "uppercase",
+  alternateOptionContainer: {
+    display: 'flex',
+    position: 'absolute',
+    bottom: 50,
+    alignItems: 'center',
+    gap: 20,
+  },
+  loginButton: {
+    paddingHorizontal: 10,
+    backgroundColor: "rgb(0, 100, 255)",
+  },
+  signupButton: {
+    padding: 5,
+    borderRadius: 30,
+    backgroundColor: 'rgb(223, 70, 97)',
   },
   switchText: {
     marginTop: 10,
-    marginHorizontal: 20,
     color: "hsl(215, 15%, 75%)",
     fontSize: 15,
-    fontWeight: "100",
     letterSpacing: 1,
   },
-  loginButton: {
-    paddingHorizontal: 10, // Ajuste o tamanho conforme necessário
-    backgroundColor: "rgb(0, 100, 255)", // Cor do texto do botão
-  },
+  textHeader: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
+    letterSpacing: 2,
+  }
 });

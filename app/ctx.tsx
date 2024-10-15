@@ -1,70 +1,69 @@
 import { useContext, createContext, type PropsWithChildren, useState } from 'react';
 import { useStorageState } from './useStorageState';
 import { router } from 'expo-router';
-import {firebaseApp} from "@/services/firebaseConfig";
-import {createLogin, login, logout} from "@/services/auth";
+import { firebaseApp } from "@/services/firebaseConfig";
+import { createLogin, login, logout } from "@/services/auth";
 
-const AuthContext = createContext<{
-  signIn: (email: string, password: string) => void;
-  signOut: () => void;
-  signUp: (email: string, password: string, nome: string) => void;
-  setId: (id: string | null) => void; //id cotaçao
-  id?: string | null; //id cotaçao
+// Define o tipo do contexto
+type AuthContextType = {
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  signUp: (email: string, password: string, nome: string) => Promise<void>;
+  setId: (id: string | null) => void;
+  id?: string | null;
   setUserEmail: (email: string | null) => void;
   userEmail?: string | null;
   firebaseApp?: typeof firebaseApp | null;
   session?: string | null;
   isLoading: boolean;
   isLoadingEmail: boolean;
-}>({
-  signIn: (email: string, password: string) => null,
-  signOut: () => null,
-  signUp: (email: string, password: string, nome: string) => null,
-  setId: () => null, //id cotaçao
-  firebaseApp: firebaseApp,
-  id: null, //id cotaçao
-  session: null,
-  setUserEmail: () => null,
-  userEmail: null,
-  isLoading: false,
-  isLoadingEmail: false,
-});
+};
 
-// This hook can be used to access the user info.
+// Inicialização do contexto
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// Hook para acessar o contexto
 export function useSession() {
-  const value = useContext(AuthContext);
-  if (process.env.NODE_ENV !== 'production') {
-    if (!value) {
-      throw new Error('useSession must be wrapped in a <SessionProvider />');
-    }
+  const context = useContext(AuthContext);
+  if (process.env.NODE_ENV !== 'production' && !context) {
+    throw new Error('useSession must be wrapped in a <SessionProvider />');
   }
-
-  return value;
+  return context;
 }
+
+// Função para validar e-mail
+const isValidEmail = (email: string): boolean => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+};
 
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState('session');
   const [id, setId] = useState<string | null>(null);
   const [[isLoadingEmail, userEmail], setUserEmail] = useStorageState('email');
 
+  // Implementa o método signUp com validação de e-mail
+  const signUp = async (email: string, password: string, nome: string) => {
+    if (!isValidEmail(email)) {
+      throw new Error("E-mail inválido. Por favor, insira um e-mail válido.");
+    }
+    await createLogin(email, password, nome);
+    // Após a criação, você pode redirecionar ou definir a sessão conforme necessário
+    // router.replace('(tabs)'); // Descomente se precisar redirecionar
+  };
+
   return (
     <AuthContext.Provider
       value={{
-        signIn: (email: string, password: string) => {
-          return login(email, password, setSession, setUserEmail);
+        signIn: async (email: string, password: string) => {
+          await login(email, password, setSession, setUserEmail);
         },
-        signOut: () => {
-          logout();
+        signOut: async () => {
+          await logout();
           setSession(null);
         },
-        signUp: (email: string, password: string, nome: string) => {
-          // Perform sign-up logic here
-          //setSession('xxx');
-          // @ts-ignore
-          //router.replace('(tabs)');
-          return createLogin(email, password, nome);
-        },
-        firebaseApp: firebaseApp,
+        signUp,
+        firebaseApp,
         setId,
         id,
         session,
